@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -167,6 +170,19 @@ public class DevicesPagerFragment extends BaseFragment implements DevicesPagerCo
     }
 
     @Override
+    public void showLocationAddConflictDialog(final String location) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DialogUtilities.showLocationsConflictDialog(getActivity(),location);
+            }
+
+
+        });
+
+    }
+
+    @Override
     public void setPresenter(@NonNull DevicesPagerContract.MvpPresenter presenter) {
         Log.d(TAG,"Presenter set!");
         mPresenter=checkNotNull(presenter);
@@ -182,6 +198,14 @@ public class DevicesPagerFragment extends BaseFragment implements DevicesPagerCo
 
     @Override
     public void showGatewayConnectionErrorDialog() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DialogUtilities.showGatewayConnectionErrorDialog(getActivity());
+            }
+
+
+        });
         DialogUtilities.showGatewayConnectionErrorDialog(getActivity());
     }
 
@@ -220,4 +244,11 @@ public class DevicesPagerFragment extends BaseFragment implements DevicesPagerCo
         mChildViews.put(checkNotNull(location),checkNotNull(childView));
         Log.d(TAG,"Added Child Fragment "+location);
     }
+
+    @Override
+    public void addLocation(String location) {
+        mPresenter.addLocation(location);
+    }
+
+
 }

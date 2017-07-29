@@ -49,7 +49,7 @@ public class DashboardActivity extends AppCompatActivity{
 
 
 
-        setTitle(getString(R.string.devices));
+        setTitle(getString(R.string.dashboard));
         DashboardFragment mDashboardFragment =
                 (DashboardFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (mDashboardFragment == null) {
@@ -118,35 +118,7 @@ public class DashboardActivity extends AppCompatActivity{
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // show menu only when home fragment is selected
-        getMenuInflater().inflate(R.menu.toolbar, menu);
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-
-        // Add Widget selected from toolbar fragment
-        if (id == R.id.action_add) {
-            Toast.makeText(getApplicationContext(), "Add Widget Selected!", Toast.LENGTH_LONG).show();
-        }
-
-        // Add Widget selected from toolbar fragment
-        if (id == R.id.action_edit) {
-            Toast.makeText(getApplicationContext(), "Edit Selected!", Toast.LENGTH_LONG).show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 }

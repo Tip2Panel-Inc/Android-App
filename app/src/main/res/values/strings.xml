@@ -76,6 +76,7 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">cancel</string>
     <string name="dialog_not_now">Not Now</string>
+    <string name="dialog_continue">Continue</string>
 
     <string name="msg_wifi_not_connected">Wifi is not enabled</string>
     <string name="msg_try_wifi_again">Turn on your wifi and try again</string>
@@ -86,6 +87,12 @@
     <string name="msg_gateway_not_found_try_again">Please ensure that the gateway is plugged in and connected to your network.</string>
     <string name="available">Available</string>
     <string name="owned">Owned</string>
+
+    <string name="msg_new_location">Add New Device Location?</string>
+    <string name="msg_location_examples">Example: Bedroom, Kitchen</string>
+
+    <string name="msg_new_location_error">Location Name Conflict!</string>
+    <string name="msg_location_exists">Location already exists!</string>
 
 
 </resources>

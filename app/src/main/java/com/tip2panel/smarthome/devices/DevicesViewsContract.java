@@ -29,5 +29,6 @@ public interface DevicesViewsContract {
         void changeDeviceName(ZNode zNode,String name);
         void changeDeviceLocation(ZNode zNode,String location);
         void setChildView(String location, ChildView childView);
+        void addLocation(String location);
     }
 }

@@ -284,15 +284,25 @@ public class GatewayLocalDataSource implements GatewayDataSource {
     }
 
     @Override
-    public void getLocations(final LoadLocationsCallback callback) {
+    public void getLocations(final LocationsCallback callback) {
         if(mAva88Gateway!=null && mAva88Gateway.isConnected()) {
             Log.d(TAG, "Local repository source getting locations from AVA Gateway."
                     + "using Address: " + mAva88Gateway.getGatewayHost());
-            mAva88Gateway.fetchLocations(new AVA88Gateway.OnfetchLocationsCallback() {
+            mAva88Gateway.fetchLocations(new AVA88Gateway.LocationsCallback() {
                 @Override
                 public void onFetchLocationsDone(List<String> locations) {
                     Log.d(TAG, "Returning locations: " + locations.toArray(new String[0]));
                     callback.onLocationsLoaded(locations);
+                }
+
+                @Override
+                public void onAddLocationsDone(String location) {
+
+                }
+
+                @Override
+                public void onAddLocationsConflict(String location) {
+
                 }
             });
         }
@@ -306,6 +316,32 @@ public class GatewayLocalDataSource implements GatewayDataSource {
         else{
             callback.onWifiNotConnected();
         }
+    }
+
+    @Override
+    public void addLocation(String location, final LocationsCallback callback) {
+        mAva88Gateway.addLocation(location, new AVA88Gateway.LocationsCallback() {
+            @Override
+            public void onFetchLocationsDone(List<String> locations) {
+
+            }
+
+            @Override
+            public void onAddLocationsDone(String location) {
+                callback.onLocationsChanged();
+            }
+
+            @Override
+            public void onAddLocationsConflict(String location) {
+                callback.onLocationAddConflict(location);
+            }
+        });
+    }
+
+    @Override
+    public void removeLocation(int id, LocationsCallback callback) {
+        mAva88Gateway.removeLocation(id);
+        callback.onLocationsChanged();
     }
 
 

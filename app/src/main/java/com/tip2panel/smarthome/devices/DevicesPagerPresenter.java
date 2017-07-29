@@ -7,6 +7,7 @@ import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
 import com.tip2panel.smarthome.data.source.GatewayDataSource;
 import com.tip2panel.smarthome.data.source.SmartHomeRepository;
+import com.tip2panel.smarthome.utils.DialogUtilities;
 
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class DevicesPagerPresenter implements DevicesPagerContract.MvpPresenter 
     @Override
     public void loadPages() {
         Log.d(TAG, "Tell presenter to load pages");
-        mSmartHomeRepository.getLocations(new GatewayDataSource.LoadLocationsCallback() {
+        mSmartHomeRepository.getLocations(new GatewayDataSource.LocationsCallback() {
             @Override
             public void onLocationsLoaded(List<String> locations) {
                 mDevicesPagerView.showPages(locations);
@@ -69,6 +70,44 @@ public class DevicesPagerPresenter implements DevicesPagerContract.MvpPresenter 
             @Override
             public void onDataNotAvailable() {
 
+            }
+
+            @Override
+            public void onLocationsChanged() {
+
+            }
+
+            @Override
+            public void onLocationAddConflict(String location) {
+
+            }
+
+        });
+    }
+
+    @Override
+    public void addLocation(String location) {
+        mSmartHomeRepository.addLocation(location, new GatewayDataSource.LocationsCallback() {
+            @Override
+            public void onLocationsLoaded(List<String> locations) {
+
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+
+            @Override
+            public void onLocationsChanged() {
+                //refresh pages
+                loadPages();
+            }
+
+            @Override
+            public void onLocationAddConflict(String location) {
+                //show conflict error
+                mDevicesPagerView.showLocationAddConflictDialog(location);
             }
         });
     }

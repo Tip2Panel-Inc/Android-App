@@ -36,10 +36,14 @@ public interface GatewayDataSource {
         void onDataNotAvailable();
     }
 
-    interface LoadLocationsCallback{
+    interface LocationsCallback {
         void onLocationsLoaded(List<String> locations);
         void onDataNotAvailable();
+        void onLocationsChanged();
+        void onLocationAddConflict(String location);
+
     }
+
 
     interface CheckNetworkStateCallback{
         void onWifiConnected();
@@ -79,7 +83,11 @@ public interface GatewayDataSource {
 
     void getAllDevices(final LoadDevicesCallback callback);
 
-    void getLocations(final LoadLocationsCallback callback);
+    void getLocations(final LocationsCallback callback);
 
     void checkNetworkState(Context context, final CheckNetworkStateCallback callback);
+
+    void addLocation(String location,final LocationsCallback callback);
+
+    void removeLocation(int id,final  LocationsCallback callback);
 }

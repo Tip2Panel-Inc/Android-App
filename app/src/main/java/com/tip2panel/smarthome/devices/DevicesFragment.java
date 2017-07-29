@@ -13,10 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
 import com.tip2panel.smarthome.R;
+import com.tip2panel.smarthome.utils.DialogUtilities;
 import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
 import java.util.List;
@@ -89,7 +91,11 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // show menu only when home fragment is selected
         inflater.inflate(R.menu.toolbar, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
     }
 
     @Override
@@ -102,12 +108,19 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
 
         // Add Widget selected from toolbar fragment
         if (id == R.id.action_add) {
-            //Add devices to this group
+            Toast.makeText(getActivity().getApplicationContext(), "Add Widget Selected!", Toast.LENGTH_LONG).show();
+            //Show add New locations Dialog
+            DialogUtilities.showAddLocationDialog(getActivity(), new DialogUtilities.LocationDialogCallback() {
+                @Override
+                public void onAddLocation(String location) {
+                    mParentView.addLocation(location);
+                }
+            });
         }
 
         // Add Widget selected from toolbar fragment
         if (id == R.id.action_edit) {
-            //edit this group
+            Toast.makeText(getActivity().getApplicationContext(), "Edit Selected!", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

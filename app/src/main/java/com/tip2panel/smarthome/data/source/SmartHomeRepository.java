@@ -2,7 +2,6 @@ package com.tip2panel.smarthome.data.source;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
@@ -108,7 +107,7 @@ public class SmartHomeRepository implements GatewayDataSource {
     }
 
     @Override
-    public void getLocations(final LoadLocationsCallback callback) {
+    public void getLocations(final LocationsCallback callback) {
         Log.d(TAG, "Tell SmartHome Repository to getLoations.");
         mGatewayLocalDataSource.getLocations(callback);
     }
@@ -116,6 +115,16 @@ public class SmartHomeRepository implements GatewayDataSource {
     @Override
     public void checkNetworkState(Context context, CheckNetworkStateCallback callback) {
         mGatewayLocalDataSource.checkNetworkState(context, callback);
+    }
+
+    @Override
+    public void addLocation(String location, LocationsCallback callback) {
+        mGatewayLocalDataSource.addLocation(location,callback);
+    }
+
+    @Override
+    public void removeLocation(int id, LocationsCallback callback) {
+        mGatewayLocalDataSource.removeLocation(id,callback );
     }
 
 }

@@ -1,16 +1,8 @@
 package com.engkan2kit.ava88;
 
-import android.app.Activity;
-import android.content.Context;
-import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.SparseArray;
-import android.util.Xml;
 
 import com.burgstaller.okhttp.AuthenticationCacheInterceptor;
 import com.burgstaller.okhttp.CachingAuthenticatorDecorator;
@@ -22,18 +14,13 @@ import com.burgstaller.okhttp.digest.DigestAuthenticator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Handler;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -417,9 +404,13 @@ public class AVA88Gateway{
     }
 
 */
+    public interface LocationsCallback {
+        void onFetchLocationsDone(List<String> locations);
+        void onAddLocationsDone(String location);
+        void onAddLocationsConflict(String location);
+    }
 
-
-    public void fetchLocations(final AVA88Gateway.OnfetchLocationsCallback callback){
+    public void fetchLocations(final LocationsCallback callback){
         String body = "";
         String uri = AVA88Gateway.command.get(COMMAND_LOAD_LOCATION_LIST);
         Callback mCallback = new Callback() {
@@ -467,8 +458,14 @@ public class AVA88Gateway{
 
     }
 
-    public void addLocation(String name){
-        String body = "action=add&name="+name+"";
+    public void addLocation(String location, final LocationsCallback callback){
+        if (location.trim().equals("Ungrouped"))
+        {
+            callback.onAddLocationsConflict(location);
+            return;
+        }
+        final String locationName = location.trim();
+        String body = "action=add&name="+locationName+"";
         String uri = AVA88Gateway.command.get(COMMAND_ADD_LOCATION);
         //TODO: Add code for handling response
         Callback mCallback = new Callback() {
@@ -479,13 +476,19 @@ public class AVA88Gateway{
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-               // mAVA88GatewayListener.onInclusionExlusionProcessEnded(0,null);
+                int responseCode = response.code();
+                if (responseCode==200){
+                    callback.onAddLocationsDone(locationName);
+                }
+                else if(responseCode==409) { //Conflict Location already existing.
+                    callback.onAddLocationsConflict(locationName);
+                }
             }
         };
         sendCommand(uri,body,mCallback);
     }
 
-    public void removeLocation(String id){
+    public void removeLocation(int id){
         String body = "action=remove&id="+id+"";
         String uri = AVA88Gateway.command.get(COMMAND_REMOVE_LOCATION);
         //TODO: Add code for handling response
@@ -510,6 +513,7 @@ public class AVA88Gateway{
     public void changeNodeName(ZNode mZNode, String newName){
 
     }
+
     public void changeValue(final ZNode znode,
                             ZNodeValue zNodeValue,
                             int instance,
@@ -647,9 +651,7 @@ public class AVA88Gateway{
         return sendCommandPolled(gatewayHost,gatewayPort, uri,body);
     }
 
-    public interface OnfetchLocationsCallback {
-        void onFetchLocationsDone(List<String> locations);
-    }
+
 
 
     public class AVA88Command{

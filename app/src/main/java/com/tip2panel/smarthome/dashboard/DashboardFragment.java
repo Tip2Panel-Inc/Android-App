@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -79,6 +83,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
         RecyclerView.ItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(getContext().getDrawable(R.drawable.line_divider));
         mDevicesRecyclerView.addItemDecoration(dividerItemDecoration);
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -165,5 +170,35 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
             handler.removeCallbacks(runnableCode);
         }
         super.onPause();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // show menu only when home fragment is selected
+        inflater.inflate(R.menu.toolbar, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+
+        // Add Widget selected from toolbar fragment
+        if (id == R.id.action_add) {
+            Toast.makeText(getActivity().getApplicationContext(), "Add Widget Selected!", Toast.LENGTH_LONG).show();
+        }
+
+        // Add Widget selected from toolbar fragment
+        if (id == R.id.action_edit) {
+            Toast.makeText(getActivity().getApplicationContext(), "Edit Selected!", Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
