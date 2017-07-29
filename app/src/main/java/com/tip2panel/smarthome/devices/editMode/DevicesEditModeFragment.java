@@ -91,25 +91,28 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
         RecyclerView.ItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(getContext().getDrawable(R.drawable.line_divider));
         mDevicesRecyclerView.addItemDecoration(dividerItemDecoration);
-        Button removeLocationButton = (Button) rootView.findViewById(R.id.deleteLocationButton);
-        removeLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //show confirmation dialog
-                DialogUtilities.showRemoveLocationsDialog(getActivity(), mLocation,
-                        new DialogUtilities.LocationDialogCallback() {
-                            @Override
-                            public void onAddLocation(String location) {
 
-                            }
+        if(!mLocation.equals("Ungrouped")) { //allow deletion of location if not ungrouped
+            Button removeLocationButton = (Button) rootView.findViewById(R.id.deleteLocationButton);
+            removeLocationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //show confirmation dialog
+                    DialogUtilities.showRemoveLocationsDialog(getActivity(), mLocation,
+                            new DialogUtilities.LocationDialogCallback() {
+                                @Override
+                                public void onAddLocation(String location) {
 
-                            @Override
-                            public void onDeleteLocation(String location) {
-                                mPresenter.removeLocation(location);
-                            }
-                        });
-            }
-        });
+                                }
+
+                                @Override
+                                public void onDeleteLocation(String location) {
+                                    mPresenter.removeLocation(location);
+                                }
+                            });
+                }
+            });
+        }
         setHasOptionsMenu(true);
         return rootView;
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -200,6 +201,22 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     case ZNodeProduct.COLOURLED:
                         final Button mColorPicker = new Button(itemView.getContext());
                         final Switch mRGBSwitch = new Switch(itemView.getContext());
+                        class ColorState {
+                            private boolean mColorState =false;
+                            public ColorState(){
+
+                            }
+                            public boolean isColorState(){
+                                return mColorState;
+                            }
+                            public void setColorState(boolean color){
+                                this.mColorState=color;
+                            }
+                        }
+                        final ColorState colorState= new ColorState();
+                        //w=white;
+                        //c=color;
+                        //b=black;
                         Log.d(TAG, "COLOUR LED");
                         //The Key for Default value for COLOURLED is SWITCH BINARY0
                         item.defaultValueKey="COLOR CONTROL97";
@@ -220,21 +237,52 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         mRGBSwitch.setLayoutParams(new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.MATCH_PARENT));
+
                         if ((R+G+B+W)>0)
                             mRGBSwitch.setChecked(true);
                         else
                             mRGBSwitch.setChecked(false);
 
                         mRGBSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                 ZNodeValue COLOURLEDzNodeValue = item.getZNodeValue(item.defaultValueKey);
-                                if (isChecked){
+                                if(isChecked){
+                                    if(!colorState.isColorState()) {
+                                        COLOURLEDzNodeValue.setValue("0x00 0x00 0x00 0xFF", item.defaultInstance);
+                                        mColorPicker.setBackgroundColor(0xffffffff);
+                                        item.addZNodeValue(item.defaultValueKey,COLOURLEDzNodeValue);
+                                        listener.onDeviceItemChangeValue(item, item.defaultValueKey,item.defaultInstance);
+                                    }
+                                    Log.d("COLORSTATE","checked!");
+                                }
+                                else{
+                                    Log.d("COLORSTATE","unchecked!");
+                                    colorState.setColorState(false);
+                                    COLOURLEDzNodeValue.setValue("0x00 0x00 0x00 0x00", item.defaultInstance);
+                                    mColorPicker.setBackgroundColor(0xff000000);
+                                    item.addZNodeValue(item.defaultValueKey,COLOURLEDzNodeValue);
+                                    listener.onDeviceItemChangeValue(item, item.defaultValueKey,item.defaultInstance);
+                                }
+                                Log.d("COLORSTATE","State: " + colorState.isColorState());
+
+                            }
+                        });
+
+
+
+                        /*
+                        mRGBSwitch.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ZNodeValue COLOURLEDzNodeValue = item.getZNodeValue(item.defaultValueKey);
+                                if (mRGBSwitch.isChecked()){
+                                    mRGBSwitch.setChecked(true);
                                     COLOURLEDzNodeValue.setValue("0x00 0x00 0x00 0xFF", item.defaultInstance);
                                     mColorPicker.setBackgroundColor(0xffffffff);
                                 }
                                 else {
+                                    mRGBSwitch.setChecked(false);
                                     COLOURLEDzNodeValue.setValue("0x00 0x00 0x00 0x00", item.defaultInstance);
                                     mColorPicker.setBackgroundColor(0xff000000);
                                 }
@@ -242,6 +290,7 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 listener.onDeviceItemChangeValue(item, item.defaultValueKey,item.defaultInstance);
                             }
                         });
+                        */
 
                         final float scale = itemView.getContext().getResources().getDisplayMetrics().density;
                         mColorPicker.setPadding(0,(int)(16* scale + 0.5f),(int)(10* scale + 0.5f),(int)(10* scale + 0.5f));
@@ -291,8 +340,11 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         B=min(B+W,255);
                                         Log.d("COLOR",R +" "+ G  +" " +B  +" " + W);
                                         mColorPicker.setBackgroundColor(0xff000000 |  R<<16 | G<<8 | B);
-                                        if ((R+G+B+W)>0)
+
+                                        if ((R+G+B+W)>0){
+                                            colorState.setColorState(true);
                                             mRGBSwitch.setChecked(true);
+                                        }
                                         else
                                             mRGBSwitch.setChecked(false);
                                         listener.onDeviceItemChangeValue(item, item.defaultValueKey,item.defaultInstance);

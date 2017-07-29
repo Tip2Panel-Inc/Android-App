@@ -28,14 +28,16 @@ public class DialogUtilities {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_wifi_not_connected)
                 .setMessage(R.string.msg_try_wifi_again)
-                .setCancelable(false).setPositiveButton(R.string.settings_capital, new
+                .setCancelable(false)
+                .setPositiveButton(R.string.settings_capital, new
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                             }
-                        }).setNegativeButton(R.string.dialog_not_now, negativeListener);
+                        })
+                .setNegativeButton(R.string.dialog_not_now, negativeListener);
         return dialogBuilder.create();
     }
 
@@ -101,7 +103,8 @@ public class DialogUtilities {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_new_location)
                 .setView(view)
-                .setCancelable(false).setPositiveButton(R.string.dialog_continue,
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_continue,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -132,7 +135,8 @@ public class DialogUtilities {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_new_location_error)
                 .setView(view)
-                .setCancelable(false).setPositiveButton(R.string.dialog_ok, new
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_ok, new
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -164,14 +168,21 @@ public class DialogUtilities {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.remove_location_confirmation)
                 .setView(view)
-                .setCancelable(false).setPositiveButton(R.string.dialog_ok, new
+                .setCancelable(true)
+                .setPositiveButton(R.string.dialog_ok, new
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 callback.onDeleteLocation(location);
                             }
-                        });
+                        })
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });;
         return dialogBuilder.create();
     }
 
