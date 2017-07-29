@@ -2,18 +2,27 @@ package com.tip2panel.smarthome.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.devices.DevicesActivity;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
+
+import java.util.List;
 
 /**
  * Created by Setsuna F. Seie on 20/07/2017.
@@ -193,5 +202,78 @@ public class DialogUtilities {
     public static void showRemoveLocationsDialog(final Activity activity, String location,
                                                  final LocationDialogCallback callback) {
         DialogUtilities.getRemoveLocationsDialog(activity,location, callback).show();
+    }
+
+
+    public interface ChangeLocationDialogCallback{
+        void onChangeLocationOk(String location);
+    }
+    /**
+     * The dialog that prompt to connect Internet, with listener.
+     */
+    public static AlertDialog getChangeLocationsDialog(final Activity activity,
+                                                       final List<String> locations,
+                                                       final String location,
+                                                       final ChangeLocationDialogCallback callback) {
+        final ArrayAdapter arrayAdapter=new ArrayAdapter(activity,
+                android.R.layout.simple_list_item_single_choice,
+                locations);
+        class SelectedLocation{
+            private String selected="Ungrouped";
+            public SelectedLocation(){
+
+            }
+            public SelectedLocation(String location){
+                this.selected=location;
+            }
+
+            public void setSelected(String location){
+                selected=location;
+            }
+            public String getSelected(){
+                return selected;
+            }
+        }
+
+        final SelectedLocation selectedLocation = new SelectedLocation(location);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.change_location_selection)
+                .setCancelable(true)
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setSingleChoiceItems (arrayAdapter,
+                        arrayAdapter.getPosition(location),
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectedLocation.setSelected(arrayAdapter.getItem(which).toString());
+
+                    }
+                })
+                .setPositiveButton(R.string.dialog_ok, new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                callback.onChangeLocationOk(selectedLocation.getSelected());
+                            }
+                        })
+                ;
+        return dialogBuilder.create();
+    }
+
+
+    /**
+     * The helper method to show gateway error alert dialog.
+     */
+    public static void showChangeLocationsDialog(final Activity activity,
+                                                 List<String> locations,
+                                                 String location,
+                                                 final ChangeLocationDialogCallback callback) {
+        DialogUtilities.getChangeLocationsDialog(activity,locations,location, callback).show();
     }
 }

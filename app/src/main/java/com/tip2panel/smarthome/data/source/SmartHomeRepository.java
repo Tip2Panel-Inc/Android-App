@@ -7,6 +7,8 @@ import android.util.Log;
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -120,6 +122,12 @@ public class SmartHomeRepository implements GatewayDataSource {
     @Override
     public void addLocation(String location, LocationsCallback callback) {
         mGatewayLocalDataSource.addLocation(location,callback);
+    }
+
+    @Override
+    public void changeNodeLocations(List<Integer> nodeIds, String newLocation,
+                                    NodeChangeLocationsCallback callback) {
+        mGatewayLocalDataSource.changeNodeLocations(nodeIds,newLocation,callback);
     }
 
     @Override

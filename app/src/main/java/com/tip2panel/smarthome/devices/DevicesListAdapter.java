@@ -34,7 +34,10 @@ import static java.lang.Math.min;
 public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG=DevicesListAdapter.class.getSimpleName();
     private List<ZNode> mList;
+    private boolean mShowCheckBox=false;
     public interface DeviceListListener{
+        void onDeviceListCheckBoxChecked(int nodeId);
+        void onDeviceListCheckBoxUnchecked(int nodeId);
         void onDeviceListItemClick (ZNode item);
         void onDeviceItemChangeValue(ZNode item, String mZNodeValueKey, int instance);
 
@@ -43,15 +46,20 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final DeviceListListener mListener;
 
     public DevicesListAdapter(List<ZNode> list,DeviceListListener listener) {
+        this(list, listener,false);
+    }
+
+    public DevicesListAdapter(List<ZNode> list,DeviceListListener listener,boolean showCheckBox) {
         this.mList = list;
         this.mListener = listener;
+        this.mShowCheckBox=showCheckBox;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int DeviceType) {
         View view;
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.devices_list_item, parent, false);
-        return new DeviceViewHolder(view);
+        return new DeviceViewHolder(view,mShowCheckBox);
 
     }
     @Override
@@ -83,14 +91,18 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private CheckBox mDeviceCheckBox;
         private TextView mDeviceName;
         private Context mContext;
+        private boolean mShowCheckBox=false;
 
         public DeviceViewHolder(View itemView) {
+            this(itemView,false);
+        }
+        public DeviceViewHolder(View itemView, boolean showCheckBox) {
             super(itemView);
             mDeviceCheckBox = (CheckBox) itemView.findViewById(R.id.deviceCheckBox);
-            mDeviceCheckBox.setVisibility(View.INVISIBLE);
             mDeviceName = (TextView) itemView.findViewById(R.id.deviceNameTextView);
             mLinearLayout = (LinearLayout) itemView.findViewById(R.id.itemCommandsLinearLayout);
             mContext = itemView.getContext();
+            mShowCheckBox=showCheckBox;
         }
 
         public void bind(final ZNode item,final DeviceListListener listener){
@@ -102,13 +114,34 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     else
                         name=item.nodeProductStr;
                 name = name + " ("+item.nodeStatusString+")";
-
                 mDeviceName.setText(name);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v){
                         listener.onDeviceListItemClick(item);
                     }
                 });
+
+                if(mShowCheckBox) {
+                    mDeviceCheckBox.setVisibility(View.VISIBLE);
+                    mDeviceCheckBox.setOnCheckedChangeListener(
+                            new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView,
+                                                     boolean isChecked) {
+                            if(isChecked){
+                                listener.onDeviceListCheckBoxChecked(item.nodeID);
+                            }
+                            else{
+                                listener.onDeviceListCheckBoxUnchecked(item.nodeID);
+                            }
+                        }
+                    });
+                }
+                else {
+                    mDeviceCheckBox.setVisibility(View.GONE);
+                }
+
+
                 switch(item.nodeProduct) {
                     case ZNodeProduct.APPLIANCEONOFF:
                         Switch mDeviceSwitch = new Switch(itemView.getContext());
@@ -371,7 +404,7 @@ public class DevicesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public DecIncViewHolder(View itemView) {
             super(itemView);
             mDeviceCheckBox = (CheckBox) itemView.findViewById(R.id.deviceCheckBox);
-            mDeviceCheckBox.setVisibility(View.INVISIBLE);
+            mDeviceCheckBox.setVisibility(View.GONE);
             mDeviceName = (TextView) itemView.findViewById(R.id.deviceNameTextView);
 
         }

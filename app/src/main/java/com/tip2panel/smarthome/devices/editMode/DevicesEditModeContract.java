@@ -15,10 +15,13 @@ public interface DevicesEditModeContract {
         void showDevicesList(List<ZNode> zNodes);
         void endEditing();
         void jumpToDeviceActivity();
+        void showChangeLocationSelector(List<String> locations,String location);
     }
 
     interface MvpPresenter extends BasePresenter {
         void loadDevices(String location);
         void removeLocation(String location);
+        void changeNodesLocation(List<Integer> nodeIds,String newLocation);
+        void loadLocationListsForSelector(String location);
     }
 }

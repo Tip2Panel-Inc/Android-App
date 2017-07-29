@@ -166,6 +166,9 @@ public class AVA88Gateway{
         command.put(COMMAND_REPLACE_FAILED_NODE,"/admpost.html");
         command.put(COMMAND_ADD_LOCATION,"/location_list.cgi");
         command.put(COMMAND_REMOVE_LOCATION,"/location_list.cgi");
+        command.put(COMMAND_SET_NODE_NAME,"/nodepost.html ");
+        command.put(COMMAND_SET_NODE_LOCATION,"/nodepost.html ");
+        command.put(COMMAND_SET_NODE_ICON,"/nodepost.html ");
     }
 
 
@@ -517,7 +520,11 @@ public class AVA88Gateway{
             callback.onAddLocationsConflict(location);
             return;
         }
-        final String locationName = location.trim();
+        if (location.trim().length()==0) {
+            callback.onAddLocationsConflict(location);
+            return;
+        }
+        final String locationName = location;
         String body = "action=add&name="+locationName+"";
         String uri = AVA88Gateway.command.get(COMMAND_ADD_LOCATION);
         //TODO: Add code for handling response
@@ -559,7 +566,54 @@ public class AVA88Gateway{
         sendCommand(uri,body,mCallback);
     }
 
-    public void changeNodeLocation(ZNode mZNode, String newLocationID){
+    public void changeNodeLocation(final int mZNodeId, final String newLocation){
+        fetchLocations(new LocationsCallback() {
+            @Override
+            public void onFetchLocationsDone(List<String> locations) {
+                String body;
+                String uri = AVA88Gateway.command.get(COMMAND_SET_NODE_LOCATION);
+                Callback mCallback = new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                    }
+                };
+                if (locations.contains(newLocation.trim())) {
+                    body = "fun=loc&node=node" + mZNodeId + "&value=" + newLocation;
+                    //TODO: Add code for sending and receiving request.
+                    sendCommand(uri, body, mCallback);
+
+                }
+                else{
+                    if(newLocation.trim().length()==0){
+                        body = "fun=loc&node=node" + mZNodeId + "&value= ";
+                        sendCommand(uri, body, mCallback);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onAddLocationsDone(String location) {
+
+            }
+
+            @Override
+            public void onAddLocationsConflict(String location) {
+
+            }
+
+            @Override
+            public void onLocationIdFound(int id) {
+
+            }
+        });
 
     }
 
@@ -806,10 +860,11 @@ public class AVA88Gateway{
                             z.nodeLocation=location;
                             boolean insertToNodeList=false;
                             if (getOnlyEmptyLocations) {
-                                if (location.trim().length()==0)
+                                //if Orphan, insert if location is empty or location==Ungrouped.
+                                if (location.trim().length()==0 || location.equals("Ungrouped"))
                                     insertToNodeList=true;
                             }
-                            else{
+                            else{//
                                 insertToNodeList=true;
                             }
                             if (insertToNodeList)  {

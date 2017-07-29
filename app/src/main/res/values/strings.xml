@@ -100,5 +100,6 @@
     <string name="remove_location_confirmation">Deleting Location!</string>
     <string name="msg_remove_location_confirmation">Are you sure you want to remove this location?</string>
 
+    <string name="change_location_selection">Move Device(s) to:</string>
 
 </resources>

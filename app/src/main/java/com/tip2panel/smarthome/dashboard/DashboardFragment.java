@@ -62,6 +62,16 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
 
     DevicesListAdapter.DeviceListListener mDevicesItemListener = new DevicesListAdapter.DeviceListListener() {
         @Override
+        public void onDeviceListCheckBoxChecked(int nodeId) {
+
+        }
+
+        @Override
+        public void onDeviceListCheckBoxUnchecked(int nodeId) {
+
+        }
+
+        @Override
         public void onDeviceListItemClick(ZNode item) {
             Log.d(TAG,"Device item Clicked!");
         }

@@ -31,6 +31,7 @@ import com.tip2panel.smarthome.utils.DialogUtilities;
 import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -49,7 +50,7 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
     private Runnable runnableCode=null;
     private View rootView;
     private String mLocation;
-
+    private List<Integer> nodeIds = new ArrayList<>();
     public DevicesEditModeFragment() {
         // Required empty public constructor
 
@@ -68,6 +69,18 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
     }
 
     DevicesListAdapter.DeviceListListener mDevicesItemListener = new DevicesListAdapter.DeviceListListener() {
+        @Override
+        public void onDeviceListCheckBoxChecked(int nodeId) {
+            nodeIds.add(new Integer(nodeId));
+            Log.d(TAG,"add to nodes to be modified " + new Integer(nodeId));
+        }
+
+        @Override
+        public void onDeviceListCheckBoxUnchecked(int nodeId) {
+            nodeIds.remove(new Integer(nodeId));
+            Log.d(TAG,"removed to nodes to be modified " + new Integer(nodeId));
+        }
+
         @Override
         public void onDeviceListItemClick(ZNode item) {
             Log.d(TAG,"Device item Clicked!");
@@ -91,9 +104,19 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
         RecyclerView.ItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(getContext().getDrawable(R.drawable.line_divider));
         mDevicesRecyclerView.addItemDecoration(dividerItemDecoration);
+        Button changeNodesLocationButton = (Button) rootView.findViewById(R.id.moveDeviceButton);
+        changeNodesLocationButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPresenter.loadLocationListsForSelector(mLocation);
 
+                    }
+                }
+        );
+        Button removeLocationButton = (Button) rootView.findViewById(R.id.deleteLocationButton);
         if(!mLocation.equals("Ungrouped")) { //allow deletion of location if not ungrouped
-            Button removeLocationButton = (Button) rootView.findViewById(R.id.deleteLocationButton);
+
             removeLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -113,6 +136,10 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
                 }
             });
         }
+        else
+        {
+            removeLocationButton.setVisibility(View.INVISIBLE);
+        }
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -127,7 +154,7 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
     public void showDevicesList(List<ZNode> zNodes) {
         View v=rootView.findViewById(R.id.devicesListRecyclerView);
         if (v!=null){
-            mDevicesListAdapter = new DevicesListAdapter(zNodes, mDevicesItemListener);
+            mDevicesListAdapter = new DevicesListAdapter(zNodes, mDevicesItemListener,true);
             getActivity().runOnUiThread(new Runnable() {
 
                 @Override
@@ -157,6 +184,29 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
             //getActivity().overridePendingTransition(0, 0);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void showChangeLocationSelector(final List<String> locations, final String location) {
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                DialogUtilities.showChangeLocationsDialog(getActivity(),locations, location,
+                        new DialogUtilities.ChangeLocationDialogCallback() {
+                            @Override
+                            public void onChangeLocationOk(String newLocation) {
+                                if(newLocation.equals("Ungrouped")){
+                                    newLocation = " ";
+                                }
+                                mPresenter.changeNodesLocation(nodeIds,newLocation);
+                                Log.d(TAG,"Apply change locations!");
+                            }
+                        });
+            }
+        });
+
     }
 
     @Override

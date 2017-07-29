@@ -56,6 +56,10 @@ public interface GatewayDataSource {
         void onGatewayOnline(AVA88GatewayInfo ava88GatewayInfo);
         void onGatewayOffline();
     }
+
+    interface NodeChangeLocationsCallback{
+        void onNodeChangeLocationsDone();
+    }
     void changeValue(ZNode node, String zNodeValueKey, int instance);
 
     void connectGateway(AVA88GatewayInfo ava88GatewayInfo,
@@ -88,6 +92,9 @@ public interface GatewayDataSource {
     void checkNetworkState(Context context, final CheckNetworkStateCallback callback);
 
     void addLocation(String location,final LocationsCallback callback);
+
+    void changeNodeLocations(final List<Integer> nodeIds, final String newLocation,
+                             NodeChangeLocationsCallback callback);
 
     void removeLocation(int id,final  LocationsCallback callback);
     void removeLocation(String location,final  LocationsCallback callback);

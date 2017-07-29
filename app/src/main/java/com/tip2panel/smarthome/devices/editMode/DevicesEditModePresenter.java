@@ -82,6 +82,42 @@ public class DevicesEditModePresenter implements DevicesEditModeContract.MvpPres
     }
 
     @Override
+    public void changeNodesLocation(List<Integer> nodeIds, String newLocation) {
+        mSmartHomeRepository.changeNodeLocations(nodeIds, newLocation,
+                new GatewayDataSource.NodeChangeLocationsCallback() {
+            @Override
+            public void onNodeChangeLocationsDone() {
+                mDeviceEditModeView.jumpToDeviceActivity();
+            }
+        });
+    }
+
+    @Override
+    public void loadLocationListsForSelector(final String location) {
+        mSmartHomeRepository.getLocations(new GatewayDataSource.LocationsCallback() {
+            @Override
+            public void onLocationsLoaded(List<String> locations) {
+                mDeviceEditModeView.showChangeLocationSelector(locations, location);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+
+            @Override
+            public void onLocationsChanged() {
+
+            }
+
+            @Override
+            public void onLocationAddConflict(String location) {
+
+            }
+        });
+    }
+
+    @Override
     public boolean isGatewayConnected() {
         return mSmartHomeRepository.isGatewayConnected();
     }

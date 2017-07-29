@@ -349,6 +349,16 @@ public class GatewayLocalDataSource implements GatewayDataSource {
     }
 
     @Override
+    public void changeNodeLocations(List<Integer> nodeIds, String newLocation,
+                                    NodeChangeLocationsCallback callback) {
+        for (int zNode:nodeIds) {
+            mAva88Gateway.changeNodeLocation(zNode,newLocation);
+        }
+        callback.onNodeChangeLocationsDone();
+
+    }
+
+    @Override
     public void removeLocation(int id, LocationsCallback callback) {
         mAva88Gateway.removeLocation(id);
         callback.onLocationsChanged();
