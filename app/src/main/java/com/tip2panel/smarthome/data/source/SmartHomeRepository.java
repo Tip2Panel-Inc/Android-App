@@ -127,4 +127,9 @@ public class SmartHomeRepository implements GatewayDataSource {
         mGatewayLocalDataSource.removeLocation(id,callback );
     }
 
+    @Override
+    public void removeLocation(String location, LocationsCallback callback) {
+        mGatewayLocalDataSource.removeLocation(location, callback);
+    }
+
 }

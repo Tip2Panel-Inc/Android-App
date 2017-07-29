@@ -35,6 +35,7 @@
     <string name="gateway">Gateway</string>
     <string name="dashboard">Dashboard</string>
     <string name="devices">Devices</string>
+    <string name="edit_devices_location">Edit Devices Group</string>
     <string name="orphan">Orphan</string>
     <string name="ungrouped">Ungrouped</string>
     <string name="widget_def_name">NO WIDGET</string>
@@ -93,6 +94,11 @@
 
     <string name="msg_new_location_error">Location Name Conflict!</string>
     <string name="msg_location_exists">Location already exists!</string>
+    <string name="location_name">Location Name</string>
+    <string name="edit_mode">Edit Mode</string>
+
+    <string name="remove_location_confirmation">Deleting Location!</string>
+    <string name="msg_remove_location_confirmation">Are you sure you want to remove this location?</string>
 
 
 </resources>

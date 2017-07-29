@@ -20,4 +20,12 @@
     <dimen name="login_button_height">40dp</dimen>
     <dimen name="login_button_padding">50dp</dimen>
     <dimen name="login_button_text_size">20sp</dimen>
+
+    <dimen name="edit_mode_toolbar_icon_size">25sp</dimen>
+    <dimen name="edit_mode_toolbar_side_margin">14dp</dimen>
+    <dimen name="edit_mode_toolbar_top_padding">3dp</dimen>
+    <dimen name="edit_mode_toolbar_buttons_side_margin">14dp</dimen>
+    <dimen name="edit_mode_toolbar_text_size">18sp</dimen>
+
+
 </resources>

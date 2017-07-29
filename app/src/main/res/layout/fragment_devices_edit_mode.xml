@@ -1,0 +1,116 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tip2panel.smarthome.devices.editMode.DevicesEditModeActivity">
+    <LinearLayout
+        android:id="@+id/pageEditToolbarLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorListItem"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/edit_mode_toolbar_top_padding"
+        android:paddingTop="@dimen/edit_mode_toolbar_top_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/edit_mode_toolbar_side_margin"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/deleteLocationButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_height="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_marginRight="@dimen/edit_mode_toolbar_buttons_side_margin"
+                android:background="@drawable/ic_delete_forever_black_24dp"
+                android:backgroundTint="@color/colorHint" />
+
+            <TextView
+                android:id="@+id/editModeLocationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_mode"
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/edit_mode_toolbar_side_margin"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/addDeviceButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_height="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_marginRight="@dimen/edit_mode_toolbar_buttons_side_margin"
+                android:background="@drawable/ic_toolbar_add"
+                android:backgroundTint="@color/colorHint" />
+
+            <Button
+                android:id="@+id/moveDeviceButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_height="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_marginRight="@dimen/edit_mode_toolbar_buttons_side_margin"
+                android:background="@drawable/ic_toolbar_swap_horiz"
+                android:backgroundTint="@color/colorHint" />
+
+            <Button
+                android:id="@+id/deleteDeviceButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="@dimen/edit_mode_toolbar_icon_size"
+                android:layout_height="@dimen/edit_mode_toolbar_icon_size"
+                android:background="@drawable/ic_delete_black"
+                android:backgroundTint="@color/colorHint" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/top_margin_for_header"
+        android:background="@color/colorHint"
+        android:baselineAligned="false"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:paddingLeft="16sp"
+        android:paddingRight="16sp">
+
+        <TextView
+            android:id="@+id/headerLabelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorHint"
+            android:ems="10"
+            android:padding="10dp"
+            android:text="@string/edit_mode"
+            android:textColor="@color/colorTextNavigationItem" />
+
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/devicesListRecyclerView"
+        android:name="android.tip2panel.com.tip2panel.activity.ViewFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        android:layout_marginLeft="@dimen/item_end_margin"
+        android:layout_marginRight="@dimen/item_end_margin"
+        tools:context="com.tip2panel.smarthome.dashboard.DashboardFragment" />
+</LinearLayout>
+
+

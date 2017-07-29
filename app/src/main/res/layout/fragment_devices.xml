@@ -18,10 +18,10 @@
             android:name="android.tip2panel.com.tip2panel.activity.ViewFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="LinearLayoutManager"
-            android:layout_marginLeft="@dimen/item_end_margin"
             android:layout_marginRight="@dimen/item_end_margin"
-            tools:context="com.tip2panel.smarthome.devices.DevicesActivity" />
+            app:layoutManager="LinearLayoutManager"
+            tools:context="com.tip2panel.smarthome.devices.DevicesActivity"
+            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
 

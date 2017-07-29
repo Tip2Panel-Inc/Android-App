@@ -1,28 +1,20 @@
 package com.tip2panel.smarthome.devices;
 
 
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
-import com.engkan2kit.ava88.ZNodeValue;
-import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
-import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -30,15 +22,10 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.tip2panel.smarthome.BaseFragment;
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.utils.DialogUtilities;
-import com.tip2panel.smarthome.utils.NetworkUtilities;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

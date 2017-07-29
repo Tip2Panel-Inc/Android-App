@@ -408,8 +408,61 @@ public class AVA88Gateway{
         void onFetchLocationsDone(List<String> locations);
         void onAddLocationsDone(String location);
         void onAddLocationsConflict(String location);
+        void onLocationIdFound(int id);
     }
 
+    public void getLocationId(final String location, final LocationsCallback callback){
+        String body = "";
+        String uri = AVA88Gateway.command.get(COMMAND_LOAD_LOCATION_LIST);
+        Callback mCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("LOCATION LIST","Error fetching Locations!");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("LOCATION LIST","Handling list of locations");
+                int id=0;
+                if(response.code()==200)
+                {
+                    Log.d("LOCATION LIST", "Response OK 200");
+                    try {
+                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder builder = factory.newDocumentBuilder();
+                        InputStream is = response.body().byteStream();
+                        Document locationDocument = builder.parse(is);
+                        locationDocument.getDocumentElement().normalize();
+                        // Request will return XML of locations stored in the gateway
+                        NodeList items = locationDocument.getElementsByTagName("item");
+                        Log.d("LOCATION LIST", "Locations: " + items.getLength());
+                        for (int k = 0; k < items.getLength(); k++) {
+                            Element item = (Element) items.item(k);
+
+                            String newLocation = item.getAttribute("location");
+                            if(newLocation.trim().equals(location.trim())) {
+                                try {
+                                    id = Integer.parseInt(item.getAttribute("id"));
+                                    callback.onLocationIdFound(id);
+                                }
+                                catch(NumberFormatException eo){
+                                    eo.printStackTrace();
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        // if an exception occurred, log it
+                        Log.e("LOCATION LIST", e.getMessage());
+                    }
+
+
+                }
+            }
+
+        };
+        sendCommandGet(uri,mCallback);
+    }
     public void fetchLocations(final LocationsCallback callback){
         String body = "";
         String uri = AVA88Gateway.command.get(COMMAND_LOAD_LOCATION_LIST);

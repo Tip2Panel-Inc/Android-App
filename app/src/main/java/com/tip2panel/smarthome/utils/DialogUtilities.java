@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.text.InputType;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -88,18 +89,18 @@ public class DialogUtilities {
 
     public interface LocationDialogCallback{
         void onAddLocation(String location);
+        void onDeleteLocation(String location);
     }
 
     /**
      * The dialog for adding new Location.
      */
     public static AlertDialog getAddLocationDialog(final Activity activity, final LocationDialogCallback callback) {
-        final EditText input = new EditText(activity);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_add_location,null);
+        final EditText input = (EditText) view.findViewById(R.id.locationNameEditText);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_new_location)
-                .setView(input)
-                .setMessage(R.string.msg_location_examples)
+                .setView(view)
                 .setCancelable(false).setPositiveButton(R.string.dialog_continue,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -123,13 +124,14 @@ public class DialogUtilities {
      * The dialog that prompt to connect Internet, with listener.
      */
     public static AlertDialog getLocationsConflictDialog(final Activity activity,String location) {
-        TextView dialogMessage = new TextView(activity);
+
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_add_location_conflict,null);
+        TextView dialogMessage = (TextView) view.findViewById(R.id.locationTextView);
         dialogMessage.setText("\""+location+ "\"");
-        dialogMessage.setGravity(Gravity.CENTER_HORIZONTAL);
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_new_location_error)
-                .setView(dialogMessage)
-                .setMessage(R.string.msg_location_exists)
+                .setView(view)
                 .setCancelable(false).setPositiveButton(R.string.dialog_ok, new
                         DialogInterface.OnClickListener() {
                             @Override
@@ -146,5 +148,39 @@ public class DialogUtilities {
      */
     public static void showLocationsConflictDialog(final Activity activity, String location) {
         DialogUtilities.getLocationsConflictDialog(activity,location).show();
+    }
+
+
+    /**
+     * The dialog that prompt to connect Internet, with listener.
+     */
+    public static AlertDialog getRemoveLocationsDialog(final Activity activity, final String location,
+                                                       final LocationDialogCallback callback) {
+
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_delete_location,null);
+        TextView dialogMessage = (TextView) view.findViewById(R.id.locationTextView);
+        dialogMessage.setText("\""+location+ "\"");
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.remove_location_confirmation)
+                .setView(view)
+                .setCancelable(false).setPositiveButton(R.string.dialog_ok, new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                callback.onDeleteLocation(location);
+                            }
+                        });
+        return dialogBuilder.create();
+    }
+
+
+    /**
+     * The helper method to show gateway error alert dialog.
+     */
+    public static void showRemoveLocationsDialog(final Activity activity, String location,
+                                                 final LocationDialogCallback callback) {
+        DialogUtilities.getRemoveLocationsDialog(activity,location, callback).show();
     }
 }

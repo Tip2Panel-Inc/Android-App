@@ -90,4 +90,5 @@ public interface GatewayDataSource {
     void addLocation(String location,final LocationsCallback callback);
 
     void removeLocation(int id,final  LocationsCallback callback);
+    void removeLocation(String location,final  LocationsCallback callback);
 }

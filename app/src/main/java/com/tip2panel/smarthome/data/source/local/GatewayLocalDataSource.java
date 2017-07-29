@@ -304,6 +304,11 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                 public void onAddLocationsConflict(String location) {
 
                 }
+
+                @Override
+                public void onLocationIdFound(int id) {
+
+                }
             });
         }
     }
@@ -335,6 +340,11 @@ public class GatewayLocalDataSource implements GatewayDataSource {
             public void onAddLocationsConflict(String location) {
                 callback.onLocationAddConflict(location);
             }
+
+            @Override
+            public void onLocationIdFound(int id) {
+
+            }
         });
     }
 
@@ -342,6 +352,32 @@ public class GatewayLocalDataSource implements GatewayDataSource {
     public void removeLocation(int id, LocationsCallback callback) {
         mAva88Gateway.removeLocation(id);
         callback.onLocationsChanged();
+    }
+
+    @Override
+    public void removeLocation(String location, final LocationsCallback callback) {
+        mAva88Gateway.getLocationId(location, new AVA88Gateway.LocationsCallback(){
+
+            @Override
+            public void onFetchLocationsDone(List<String> locations) {
+
+            }
+
+            @Override
+            public void onAddLocationsDone(String location) {
+
+            }
+
+            @Override
+            public void onAddLocationsConflict(String location) {
+
+            }
+
+            @Override
+            public void onLocationIdFound(int id) {
+                removeLocation(id, callback);
+            }
+        });
     }
 
 

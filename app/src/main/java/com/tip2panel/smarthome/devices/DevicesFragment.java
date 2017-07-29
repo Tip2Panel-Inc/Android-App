@@ -1,6 +1,7 @@
 package com.tip2panel.smarthome.devices;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
 import com.tip2panel.smarthome.R;
+import com.tip2panel.smarthome.devices.editMode.DevicesEditModeActivity;
+import com.tip2panel.smarthome.devices.editMode.DevicesEditModeFragment;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
@@ -99,6 +102,11 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //mPresenter.result(requestCode, resultCode);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -108,20 +116,28 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
 
         // Add Widget selected from toolbar fragment
         if (id == R.id.action_add) {
-            Toast.makeText(getActivity().getApplicationContext(), "Add Widget Selected!", Toast.LENGTH_LONG).show();
             //Show add New locations Dialog
             DialogUtilities.showAddLocationDialog(getActivity(), new DialogUtilities.LocationDialogCallback() {
                 @Override
                 public void onAddLocation(String location) {
                     mParentView.addLocation(location);
                 }
+
+                @Override
+                public void onDeleteLocation(String location) {
+
+                }
             });
         }
 
         // Add Widget selected from toolbar fragment
         if (id == R.id.action_edit) {
-            Toast.makeText(getActivity().getApplicationContext(), "Edit Selected!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getActivity(), DevicesEditModeActivity.class);
+            intent.putExtra(DevicesEditModeFragment.ARGUMENT_EDIT_MODE,mLocation);
+            startActivityForResult(intent, DevicesEditModeActivity.REQUEST_EDIT_MODE);
         }
+
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -163,6 +179,7 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
 
         }
     }
+
 
     DevicesListAdapter.DeviceListListener mDevicesItemListener = new DevicesListAdapter.DeviceListListener() {
         @Override
