@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_out_bottom.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_popup_enter.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_popup_enter.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_popup_exit.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_popup_exit.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_grow_fade_in_from_bottom.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_out_top.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_slide_out_top.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_in_top.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_slide_in_top.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_fade_out.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_fade_out.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_in_bottom.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_fade_in.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_fade_in.xml"
+    },
+    {
+        "merged": "D:\\ANDROID\\apps\\SmartHome\\app\\libs\\ava88\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_shrink_fade_out_from_bottom.xml",
+        "source": "C:\\Users\\Setsuna F. Seie\\.android\\build-cache\\a650ba34dcc01721907bbc7fe64a3c803bfd0dfc\\output\\res\\anim\\abc_shrink_fade_out_from_bottom.xml"
+    }
+]

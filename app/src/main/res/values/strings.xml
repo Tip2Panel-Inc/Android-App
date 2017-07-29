@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">TIP</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="gateway_finder">Gateway Finder</string>
+    <string name="gateway_found">Gateway(s) Found</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="widget_name">
+        <item>AIRCONDITIONER</item>
+        <item>ALARM</item>
+        <item>CO</item>
+        <item>CURTAIN</item>
+        <item>DIMMER</item>
+        <item>DOOR</item>
+        <item>DOORLOCK</item>
+        <item>FAN</item>
+        <item>FENCE</item>
+        <item>FOG</item>
+        <item>LIGHT</item>
+        <item>ROLLER</item>
+        <item>SWITCH</item>
+        <item>WINDOW</item>
+    </string-array>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="discover_gateway">Discover Gateway(s)</string>
+    <string name="gateway_discovery">Gateway Discovery </string>
+    <string name="gateway">Gateway</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="devices">Devices</string>
+    <string name="orphan">Orphan</string>
+    <string name="ungrouped">Ungrouped</string>
+    <string name="widget_def_name">NO WIDGET</string>
+    <string name="discover_device">Discover Device(s)</string>
+    <string name="device_discovery">Device Discovery</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+
+    <string name="gateway_discovery_hint">Shows the Gateways available in your network. \n(Clicking on the gateway will require authentication)</string>
+    <string name="device_discovery_hint">Shows the devices ready for pairing and setup. \n(Successful pairing automatically adds the\n deviceto Orphan Devices)</string>
+    <string name="dashboard_devices_hint">These are the devices in your network. \n Devices are organized by room in the DEVICES menu.</string>
+    <string name="title_activity_sign_in">Sign in</string>
+
+    <string name="login">LOGIN</string>
+    <string name="login_with_fb">LOGIN WITH FACEBOOK</string>
+    <string name="register">REGISTER</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!-- Strings related to PIR Sensor -->
+    <string name="motion_detected">Motion Detected</string>
+    <string name="intrusion">Intrusion</string>
+    <string name="tampering">Tamperered</string>
+    <string name="glass_break">Glass Broken</string>
+    <string name="no_event">No Events</string>
+
+    <!-- Strings related to Custom Dialog -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">cancel</string>
+    <string name="dialog_not_now">Not Now</string>
+
+    <string name="msg_wifi_not_connected">Wifi is not enabled</string>
+    <string name="msg_try_wifi_again">Turn on your wifi and try again</string>
+    <string name="settings_capital">Goto Wifi Settings</string>
+
+
+    <string name="msg_gateway_error">Gateway error</string>
+    <string name="msg_gateway_not_found_try_again">Please ensure that the gateway is plugged in and connected to your network.</string>
+    <string name="available">Available</string>
+    <string name="owned">Owned</string>
+
+
+</resources>

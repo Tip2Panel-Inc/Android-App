@@ -1,0 +1,33 @@
+ <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/top_margin_for_header"
+    tools:context="com.tip2panel.smarthome.dashboard.DashboardFragment">
+    <TextView
+        android:id="@+id/gateDiscoveryHintTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorHint"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="16dp"
+        android:text="@string/dashboard_devices_hint"
+        android:textColor="@color/colorTextNavigationItem"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/devicesListRecyclerView"
+        android:name="android.tip2panel.com.tip2panel.activity.ViewFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        android:layout_marginLeft="@dimen/item_end_margin"
+        android:layout_marginRight="@dimen/item_end_margin"
+        tools:context="com.tip2panel.smarthome.dashboard.DashboardFragment" />
+    </LinearLayout>
+
+

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/discoverGatewayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_margin="16dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:paddingBottom="0dp"
+        android:paddingLeft="@dimen/top_button_side_padding"
+        android:paddingRight="@dimen/top_button_side_padding"
+        android:paddingTop="0dp"
+        android:text="@string/discover_gateway"
+        android:textColor="@color/colorTextNavigationItem"
+        android:textSize="@dimen/top_button_text_size"/>
+
+    <TextView
+        android:id="@+id/gateDiscoveryHintTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorHint"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="16dp"
+        android:text="@string/gateway_discovery_hint"
+        android:textColor="@color/colorTextNavigationItem"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+    <LinearLayout
+        android:id="@+id/ownedGatewaylinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/top_margin_for_header"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ownedGatewayHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorHint"
+            android:ems="12"
+            android:paddingBottom="@dimen/item_padding_bottom"
+            android:paddingLeft="@dimen/item_padding_left"
+            android:paddingTop="@dimen/item_padding_top"
+            android:text="@string/owned"
+            android:textColor="@color/colorTextNavigationItem" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gateway_owned_list"
+            android:name="android.tip2panel.com.tip2panel.activity.ViewFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="LinearLayoutManager"
+            tools:context="com.tip2panel.smarthome.gateway.GatewayFragment" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/top_margin_for_header">
+
+        <TextView
+            android:id="@+id/availableGatewayHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorHint"
+            android:ems="12"
+            android:paddingBottom="@dimen/item_padding_bottom"
+            android:paddingLeft="@dimen/item_padding_left"
+            android:paddingTop="@dimen/item_padding_top"
+            android:text="@string/available"
+            android:textColor="@color/colorTextNavigationItem" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gateway_available_list"
+            android:name="android.tip2panel.com.tip2panel.activity.ViewFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="LinearLayoutManager"
+            tools:context="com.tip2panel.smarthome.devices.DevicesActivity" />
+    </LinearLayout>
+
+
+</LinearLayout>

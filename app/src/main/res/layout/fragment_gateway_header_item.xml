@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorHint"
+    android:baselineAligned="false"
+    android:columnCount="3"
+    android:orientation="horizontal"
+    android:paddingLeft="16sp"
+    android:paddingRight="16sp">
+
+    <TextView
+        android:id="@+id/headerLabelTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorHint"
+        android:ems="10"
+        android:padding="10dp"
+        android:text="Name"
+        android:textColor="@color/colorTextNavigationItem" />
+
+</LinearLayout>

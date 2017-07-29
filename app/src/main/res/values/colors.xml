@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffe119</color>
+    <color name="colorPrimaryDark">#e5ad06</color>
+    <color name="colorAccent">#20253d</color>
+
+    <color name="colorNavigationBackground">#535453</color>
+    <color name="colorNavigationItemBorder">#989898</color>
+    <color name="colorNavigationIcon">#FFFFFFFF</color>
+    <color name="colorTextNavigationItem">#ffffff</color>
+    <color name="colorNavigationDark">#6c706c</color>
+    <color name="colorNavigationMediumDark">#535453</color>
+    <color name="colorNavigationLighterDark">#4a4b4a</color>
+
+    <color name="colorToolbarIcon">#FFFFFFFF</color>
+
+    <color name="colorHint">#6e7180</color>
+    <color name="colorListItem">#e7e8ea</color>
+    <color name="colorListItemBorder">#CBCBCB</color>
+    <color name="backgroundColor">#ffffff</color>
+    <color name="buttonText">#ffffff</color>
+    <color name="iconColor">#FFFFFF</color>
+
+
+
+    <!-- Pager Colors-->
+    <color name="colorTextEnabled">#4a4b4a</color>
+    <color name="colorTextDisabled">#9799a5</color>
+    <color name="colorPageTabBackground">#ffffff</color>
+    <color name="colorPageTabIndicator">#40C4FF</color>
+
+</resources>

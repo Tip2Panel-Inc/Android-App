@@ -1,0 +1,3 @@
+include ':app', ':ava88', ':AmbilwarnaColorPicker'
+project(':ava88').projectDir = new File('app/libs/ava88')
+project(':AmbilwarnaColorPicker').projectDir = new File('app/libs/AmbilwarnaColorPicker')
