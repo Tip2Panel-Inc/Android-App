@@ -47,7 +47,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Displays a list of {@link com.engkan2kit.ava88.AVA88GatewayInfo}. User can click on the gateway
  * to connect or see detail.
  */
-public class GatewayFragment extends BaseFragment implements GatewayContract.MvpView{
+public class GatewayFragment extends Fragment implements GatewayContract.MvpView{
     private final static String TAG = GatewayFragment.class.getSimpleName();
     private GatewayContract.MvpPresenter mPresenter;
     private GatewayListAdapter mOwnedGatewaysListAdapter;

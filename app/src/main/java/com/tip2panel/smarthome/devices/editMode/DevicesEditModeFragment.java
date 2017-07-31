@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.tip2panel.smarthome.BaseFragment;
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.dashboard.DashboardActivity;
 import com.tip2panel.smarthome.dashboard.DashboardContract;

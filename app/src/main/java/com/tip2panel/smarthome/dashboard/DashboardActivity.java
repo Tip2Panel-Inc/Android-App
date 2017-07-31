@@ -19,8 +19,9 @@ import com.tip2panel.smarthome.data.source.local.GatewayLocalDataSource;
 import com.tip2panel.smarthome.devices.DevicesActivity;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
 import com.tip2panel.smarthome.utils.ActivityUtils;
+import com.tip2panel.smarthome.utils.BaseActivity;
 
-public class DashboardActivity extends AppCompatActivity{
+public class DashboardActivity extends BaseActivity{
     private DashboardPresenter mDashboardPresenter;
     private DrawerLayout drawer;
     private Toolbar toolbar;

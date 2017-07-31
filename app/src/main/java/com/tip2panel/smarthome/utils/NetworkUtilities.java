@@ -9,7 +9,11 @@ import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
+import org.reactivestreams.Subscriber;
+
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -20,16 +24,14 @@ import io.reactivex.schedulers.Schedulers;
 public class NetworkUtilities {
     public static final String TAG = NetworkUtilities.class.getSimpleName();
     public static boolean enableLogs = true;
+    public static boolean enableAlerts = false;
+    private Disposable networkDisposable;
     public static void checkNetworkState(){
 
     }
 
-    public interface NetworkEventsCallback{
-        void onWifiConnected();
-        void onWifiDisconnected();
-        void onDataConnected();
-        void onDataDisconnected();
-    }
+
+
 
     public static boolean isWifiOnline(Context context) {
         try {
@@ -42,20 +44,4 @@ public class NetworkUtilities {
         return false;
     }
 
-    public static void subcribeToNetworkEvents(Context context, final NetworkEventsCallback callback){
-        ReactiveNetwork.observeNetworkConnectivity(context)
-                .subscribeOn(Schedulers.io())
-                .filter(ConnectivityPredicate.hasType(ConnectivityManager.TYPE_WIFI))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Connectivity>() {
-                    @Override public void accept(final Connectivity connectivity) {
-                        if(connectivity.isAvailable()) {
-                            callback.onWifiConnected();
-                        }
-                        else {
-                            callback.onWifiDisconnected();
-                        }
-                    }
-                });
-    }
 }

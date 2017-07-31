@@ -19,35 +19,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        NetworkUtilities.subcribeToNetworkEvents(getActivity().getApplicationContext(),
-                new NetworkUtilities.NetworkEventsCallback() {
-                    @Override
-                    public void onWifiConnected() {
-                        Log.d("WIFI", "WIFI CONNECTED!!!");
-                    }
-
-                    @Override
-                    public void onWifiDisconnected() {
-                        Log.d("WIFI", "WIFI DISCONNECTED!!!");
-                        DialogUtilities.getNoWifiDialog(getActivity(), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                getActivity().finish();
-                            }
-                        }).show();
-                    }
-
-                    @Override
-                    public void onDataConnected() {
-
-                    }
-
-                    @Override
-                    public void onDataDisconnected() {
-
-                    }
-                });
 
     }
 }

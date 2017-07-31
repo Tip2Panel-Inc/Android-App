@@ -21,8 +21,9 @@ import com.tip2panel.smarthome.gateway.GatewayActivity;
 import com.tip2panel.smarthome.gateway.GatewayFragment;
 import com.tip2panel.smarthome.gateway.GatewayPresenter;
 import com.tip2panel.smarthome.utils.ActivityUtils;
+import com.tip2panel.smarthome.utils.BaseActivity;
 
-public class DevicesActivity extends AppCompatActivity{
+public class DevicesActivity extends BaseActivity{
     private DevicesPagerPresenter mDevicesPagerPresenter;
     private DrawerLayout drawer;
     private Toolbar toolbar;

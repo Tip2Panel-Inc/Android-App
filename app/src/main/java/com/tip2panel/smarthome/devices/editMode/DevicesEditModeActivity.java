@@ -20,8 +20,9 @@ import com.tip2panel.smarthome.data.source.local.GatewayLocalDataSource;
 import com.tip2panel.smarthome.devices.DevicesActivity;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
 import com.tip2panel.smarthome.utils.ActivityUtils;
+import com.tip2panel.smarthome.utils.BaseActivity;
 
-public class DevicesEditModeActivity extends AppCompatActivity{
+public class DevicesEditModeActivity extends BaseActivity{
     public static final int REQUEST_EDIT_MODE = 1;
     private DevicesEditModePresenter mDevicesEditModePresenter;
     private DrawerLayout drawer;
