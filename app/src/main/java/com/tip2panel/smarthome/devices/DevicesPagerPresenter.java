@@ -126,7 +126,7 @@ public class DevicesPagerPresenter implements DevicesPagerContract.MvpPresenter 
             }
 
             @Override
-            public void onFailure(String message) {
+            public void onFailure(int error, AVA88GatewayInfo gatewayInfo) {
                 mDevicesPagerView.showGatewayConnectionErrorDialog();
             }
         });

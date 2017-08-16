@@ -71,9 +71,10 @@ public class DashboardPresenter implements DashboardContract.MvpPresenter {
             }
 
             @Override
-            public void onFailure(String message) {
+            public void onFailure(int error, AVA88GatewayInfo gatewayInfo) {
                 mDevicesPagerView.showGatewayConnectionErrorDialog();
             }
+
         });
     }
 

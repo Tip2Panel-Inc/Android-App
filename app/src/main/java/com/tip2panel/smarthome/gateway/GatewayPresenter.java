@@ -88,10 +88,8 @@ public class GatewayPresenter implements MvpPresenter {
     }
 
     @Override
-    public void connectGateway(AVA88GatewayInfo ava88GatewayInfo) {
+    public void connectGateway(final AVA88GatewayInfo ava88GatewayInfo) {
         Log.d(TAG,"Connecting to " + ava88GatewayInfo.hardwareAddress);
-        ava88GatewayInfo.user="admin";
-        ava88GatewayInfo.password="admin";
         if(ava88GatewayInfo.isOwned){
             //Check stored gateway info if still online and connect if yes.
             mSmartHomeRepository.connectKnownGateway(ava88GatewayInfo,
@@ -103,7 +101,8 @@ public class GatewayPresenter implements MvpPresenter {
                         }
 
                         @Override
-                        public void onFailure(String message) {
+                        public void onFailure(int error,AVA88GatewayInfo gatewayInfo) {
+                            handleGatewayConnectionError(error,gatewayInfo);
                             //Show toast that the connection failed
                             Log.d(TAG,"Gateway Connection Failed!");
                         }
@@ -119,13 +118,25 @@ public class GatewayPresenter implements MvpPresenter {
                 }
 
                 @Override
-                public void onFailure(String message) {
+                public void onFailure(int error,AVA88GatewayInfo gatewayInfo) {
+                    handleGatewayConnectionError(error,gatewayInfo);
                     //Show toast that the connection failed
                     Log.d(TAG,"Gateway Connection Failed!");
                 }
             });
 
 
+        }
+    }
+
+    void handleGatewayConnectionError(int error,AVA88GatewayInfo ava88GatewayInfo){
+        switch (error){
+            case AVA88Gateway.GatewayConnectionCallback.INVALID_CREDENTIALS:
+                mGatewayView.showInvalidGatewayCredentialsDialog(ava88GatewayInfo);
+                break;
+            case AVA88Gateway.GatewayConnectionCallback.NOT_CONNECTED:
+                mGatewayView.showGatewayNotOnlineDialog();
+                break;
         }
     }
 
@@ -157,8 +168,8 @@ public class GatewayPresenter implements MvpPresenter {
             }
 
             @Override
-            public void onFailure(String message) {
-                mGatewayView.showGatewayConnectionErrorDialog();
+            public void onFailure(int error,AVA88GatewayInfo ava88GatewayInfo) {
+                handleGatewayConnectionError(error,ava88GatewayInfo);
             }
         });
     }

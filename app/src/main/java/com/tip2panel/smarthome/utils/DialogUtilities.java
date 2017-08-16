@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.devices.DevicesActivity;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
@@ -64,7 +66,7 @@ public class DialogUtilities {
     }
 
     /**
-     * The dialog that prompt to connect Internet, with listener.
+     * The dialog that shows gateway error, with listener.
      */
     public static AlertDialog getGatewayConnectionErrorDialog(final Activity activity) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
@@ -97,11 +99,75 @@ public class DialogUtilities {
         DialogUtilities.getGatewayConnectionErrorDialog(activity).show();
     }
 
+    /**
+     * The dialog that shows gateway invalid credentials, with listener.
+     */
+    public static AlertDialog getGatewayInvalidCredentialsErrorDialog(final Activity activity, final AVA88GatewayInfo ava88GatewayInfo) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.msg_gateway_error)
+                .setMessage(R.string.msg_invalid_gateway_credentials)
+                .setCancelable(false).setPositiveButton(R.string.dialog_ok, new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+        return dialogBuilder.create();
+    }
+
+
+    /**
+     * The helper method to show gateway invalid credentials error alert dialog.
+     */
+    public static void showGatewayInvalidCredentialsErrorDialog(final Activity activity, AVA88GatewayInfo ava88GatewayInfo) {
+        DialogUtilities.getGatewayInvalidCredentialsErrorDialog(activity,ava88GatewayInfo).show();
+    }
+
 
     public interface LocationDialogCallback{
         void onAddLocation(String location);
         void onDeleteLocation(String location);
     }
+
+    public interface GatewayLoginDialogCallback{
+        void onLogin(String user, String password);
+        void onInvalidCredentials(String user);
+    }
+
+    /**
+     * The dialog for entering credentials for the gateway.
+     */
+    public static AlertDialog getGatewayLoginDialog(final Activity activity, @Nullable String user,
+                                                    final GatewayLoginDialogCallback callback) {
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_gateway_login,null);
+        final EditText usernameEditText = (EditText) view.findViewById(R.id.usernameEditText);
+        final EditText passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_login)
+                .setView(view)
+                .setCancelable(true)
+                .setPositiveButton(R.string.dialog_continue,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                callback.onLogin(usernameEditText.getText().toString(),
+                                        passwordEditText.getText().toString());
+                                dialog.dismiss();
+                            }
+                        });
+        return dialogBuilder.create();
+    }
+
+    /**
+     * The helper method to show  entering credentials for the gateway dialog.
+     */
+    public static void showGatewayLoginDialog(final Activity activity, @Nullable String user, final GatewayLoginDialogCallback callback) {
+        DialogUtilities.getGatewayLoginDialog(activity,user,callback).show();
+    }
+
+
+
 
     /**
      * The dialog for adding new Location.

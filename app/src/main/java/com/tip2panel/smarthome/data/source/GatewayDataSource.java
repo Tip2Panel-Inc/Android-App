@@ -28,7 +28,7 @@ public interface GatewayDataSource {
 
     interface GatewayConnectionCallback{
         void onSuccess(AVA88GatewayInfo ava88GatewayInfo);
-        void onFailure(String message);
+        void onFailure(int error,AVA88GatewayInfo ava88GatewayInfo);
     }
 
     interface LoadDevicesCallback{

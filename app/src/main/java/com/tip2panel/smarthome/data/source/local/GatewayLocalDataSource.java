@@ -79,14 +79,24 @@ public class GatewayLocalDataSource implements GatewayDataSource {
     }
 
     @Override
-    public void connectGateway(AVA88GatewayInfo ava88GatewayInfo,
-                               @NonNull GatewayConnectionCallback callback) {
+    public void connectGateway(final AVA88GatewayInfo ava88GatewayInfo,
+                               @NonNull final GatewayConnectionCallback callback) {
             mAva88Gateway = new AVA88Gateway(ava88GatewayInfo);
-            mAva88Gateway.connect();
-            saveGateway(ava88GatewayInfo);
-            setActiveGateway(ava88GatewayInfo);
-        //TODO: Try to get URI to check if connected.
-            callback.onSuccess(ava88GatewayInfo);
+            mAva88Gateway.connect(new AVA88Gateway.GatewayConnectionCallback() {
+                @Override
+                public void onSuccess() {
+                    saveGateway(ava88GatewayInfo);
+                    setActiveGateway(ava88GatewayInfo);
+                    callback.onSuccess(ava88GatewayInfo);
+                }
+
+                @Override
+                public void onFailure(int error) {
+                    mAva88Gateway.disConnect();
+                    mAva88Gateway=null;
+                    callback.onFailure(error, ava88GatewayInfo);
+                }
+            });
     }
 
     @Override
@@ -97,14 +107,26 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                 Log.d(TAG, "Connected Known Gateway!");
                 ava88GatewayInfo.ipv4Address=info.ipv4Address;
                 mAva88Gateway = new AVA88Gateway(ava88GatewayInfo);
-                mAva88Gateway.connect();
-                setActiveGateway(ava88GatewayInfo);
-                callback.onSuccess(ava88GatewayInfo);
+                mAva88Gateway.connect(new AVA88Gateway.GatewayConnectionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        saveGateway(ava88GatewayInfo);
+                        setActiveGateway(ava88GatewayInfo);
+                        callback.onSuccess(ava88GatewayInfo);
+                    }
+
+                    @Override
+                    public void onFailure(int error) {
+                        mAva88Gateway.disConnect();
+                        mAva88Gateway=null;
+                        callback.onFailure(error,ava88GatewayInfo);
+                    }
+                });
             }
 
             @Override
             public void onGatewayOffline() {
-                callback.onFailure("Failure!");
+                callback.onFailure(AVA88Gateway.GatewayConnectionCallback.NOT_CONNECTED,ava88GatewayInfo);
             }
         });
     }

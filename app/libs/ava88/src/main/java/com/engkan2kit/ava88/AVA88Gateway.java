@@ -169,8 +169,8 @@ public class AVA88Gateway{
         command.put(COMMAND_SET_NODE_NAME,"/nodepost.html ");
         command.put(COMMAND_SET_NODE_LOCATION,"/nodepost.html ");
         command.put(COMMAND_SET_NODE_ICON,"/nodepost.html ");
+        command.put(COMMAND_GET_GATEWAY_PRIVATE_IP,"/private_ip.cgi ");
     }
-
 
     public AVA88Gateway(AVA88GatewayInfo ava88GatewayInfo){
         this(ava88GatewayInfo.ipv4Address,5000,ava88GatewayInfo.user,ava88GatewayInfo.password);
@@ -353,6 +353,9 @@ public class AVA88Gateway{
 
     public void connect(){
         connected=true;
+    }
+    public void disConnect(){
+        connected=false;
     }
 
     public boolean isConnected(){
@@ -648,6 +651,44 @@ public class AVA88Gateway{
         sendCommand(uri,body,mCallback);
 
     }
+    public interface GatewayConnectionCallback{
+        int INVALID_CREDENTIALS=1;
+        int NOT_CONNECTED=2;
+        int UNKNOWN_ERROR=0;
+        void onSuccess();
+        void onFailure(int error);
+    }
+    public void connect(final GatewayConnectionCallback callback){
+        String uri = AVA88Gateway.command.get(COMMAND_GET_GATEWAY_PRIVATE_IP);
+        Callback mCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("LOGIN","IO ERROR");
+                callback.onFailure(GatewayConnectionCallback.NOT_CONNECTED);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int responseCode = response.code();
+                switch(responseCode) {
+                    case 200: //Connection fine!
+                        Log.d("LOGIN","SUCCESS");
+                        connect();
+                        callback.onSuccess();
+                        break;
+                    case 401: //No credentials!
+                        Log.d("LOGIN","Invalid credentials");
+                        callback.onFailure(GatewayConnectionCallback.INVALID_CREDENTIALS);
+                        break;
+                    default: //unknown error
+                        Log.d("LOGIN","UNKNOWN ERROR");
+                        callback.onFailure(GatewayConnectionCallback.UNKNOWN_ERROR);
+                }
+
+            }
+        };
+        sendCommandGet(uri,mCallback);
+    }
 
     public void startInclusion(final AVA88GatewayListener callback){
         String body = "fun=addd";
@@ -934,5 +975,7 @@ public class AVA88Gateway{
         void onValueChangeResponseListener(ZNode mZNode,Boolean isSuccessfull);
         void onInclusionExlusionProcessEnded(int status, @Nullable ZNode node);
     }
+
+
 
 }

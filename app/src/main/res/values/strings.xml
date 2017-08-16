@@ -86,6 +86,8 @@
 
     <string name="msg_gateway_error">Gateway error</string>
     <string name="msg_gateway_not_found_try_again">Please ensure that the gateway is plugged in and connected to your network.</string>
+    <string name="msg_invalid_gateway_credentials">The username or password entered is incorrect!</string>
+    <string name="dialog_login">Login to Gateway</string>
     <string name="available">Available</string>
     <string name="owned">Owned</string>
 
@@ -101,5 +103,8 @@
     <string name="msg_remove_location_confirmation">Are you sure you want to remove this location?</string>
 
     <string name="change_location_selection">Move Device(s) to:</string>
+
+    <string name="gateway_username">Gateway Username</string>
+    <string name="gateway_password">Gateway Password</string>
 
 </resources>

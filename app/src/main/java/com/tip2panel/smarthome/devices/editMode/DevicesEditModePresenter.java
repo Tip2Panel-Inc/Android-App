@@ -131,7 +131,7 @@ public class DevicesEditModePresenter implements DevicesEditModeContract.MvpPres
             }
 
             @Override
-            public void onFailure(String message) {
+            public void onFailure(int error, AVA88GatewayInfo gatewayInfo) {
                 mDeviceEditModeView.showGatewayConnectionErrorDialog();
             }
         });

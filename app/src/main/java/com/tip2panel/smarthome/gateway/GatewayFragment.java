@@ -141,6 +141,42 @@ public class GatewayFragment extends Fragment implements GatewayContract.MvpView
     }
 
     @Override
+    public void showGatewayNotOnlineDialog() {
+        DialogUtilities.showGatewayConnectionErrorDialog(getActivity());
+    }
+
+    @Override
+    public void showInvalidGatewayCredentialsDialog(final AVA88GatewayInfo ava88GatewayInfo) {
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                DialogUtilities.showGatewayInvalidCredentialsErrorDialog(getActivity(),ava88GatewayInfo);
+            }
+        });
+
+    }
+
+    @Override
+    public void showGatewayLoginDialog(final AVA88GatewayInfo ava88GatewayInfo) {
+        DialogUtilities.showGatewayLoginDialog(getActivity(), null,
+                new DialogUtilities.GatewayLoginDialogCallback() {
+            @Override
+            public void onLogin(String user, String password) {
+                ava88GatewayInfo.user=user;
+                ava88GatewayInfo.password=password;
+                Log.d(TAG,"password="+password);
+                mPresenter.connectGateway(ava88GatewayInfo);
+            }
+
+            @Override
+            public void onInvalidCredentials(String user) {
+
+            }
+        });
+    }
+
+    @Override
     public void showNoAvailableGateway(boolean show) {
 
     }
@@ -151,11 +187,18 @@ public class GatewayFragment extends Fragment implements GatewayContract.MvpView
     }
 
     @Override
-    public void showGatewayConnected(AVA88GatewayInfo item) {
-        Toast.makeText(getContext(),
-                "Connected to " + item.hardwareAddress+
-                        " @"+item.ipv4Address,
-                Toast.LENGTH_LONG).show();
+    public void showGatewayConnected(final AVA88GatewayInfo item) {
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(getContext(),
+                        "Connected to " + item.hardwareAddress+
+                                " @"+item.ipv4Address,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 
@@ -188,7 +231,12 @@ public class GatewayFragment extends Fragment implements GatewayContract.MvpView
                 @Override
                 public void onGatewayClick(AVA88GatewayInfo item) {
                     //TODO: Connect to this gateway info
-                    mPresenter.connectGateway(item);
+                    if (!item.isOwned){
+                        showGatewayLoginDialog(item);
+                    }else{
+                        mPresenter.connectGateway(item);
+                    }
+
                 }
 
             };
