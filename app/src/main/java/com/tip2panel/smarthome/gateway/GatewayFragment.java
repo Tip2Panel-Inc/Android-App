@@ -151,7 +151,33 @@ public class GatewayFragment extends Fragment implements GatewayContract.MvpView
 
             @Override
             public void run() {
-                DialogUtilities.showGatewayInvalidCredentialsErrorDialog(getActivity(),ava88GatewayInfo);
+                DialogUtilities.showGatewayInvalidCredentialsErrorDialog(getActivity(),
+                        ava88GatewayInfo,
+                        new DialogUtilities.GatewayLoginDialogCallback() {
+                            @Override
+                            public void onLogin(String user, String password) {
+
+                            }
+
+                            @Override
+                            public void onInvalidCredentials(final AVA88GatewayInfo ava88GatewayInfo) {
+                                DialogUtilities.showGatewayLoginDialog(getActivity(),
+                                        ava88GatewayInfo.user,
+                                        new DialogUtilities.GatewayLoginDialogCallback() {
+                                            @Override
+                                            public void onLogin(String user, String password) {
+                                                ava88GatewayInfo.user=user;
+                                                ava88GatewayInfo.password=password;
+                                                mPresenter.connectGateway(ava88GatewayInfo);
+                                            }
+
+                                            @Override
+                                            public void onInvalidCredentials(AVA88GatewayInfo ava88GatewayInfo) {
+
+                                            }
+                                        });
+                            }
+                        });
             }
         });
 
@@ -170,7 +196,7 @@ public class GatewayFragment extends Fragment implements GatewayContract.MvpView
             }
 
             @Override
-            public void onInvalidCredentials(String user) {
+            public void onInvalidCredentials(AVA88GatewayInfo gatewayInfo) {
 
             }
         });

@@ -102,7 +102,10 @@ public class DialogUtilities {
     /**
      * The dialog that shows gateway invalid credentials, with listener.
      */
-    public static AlertDialog getGatewayInvalidCredentialsErrorDialog(final Activity activity, final AVA88GatewayInfo ava88GatewayInfo) {
+    public static AlertDialog
+    getGatewayInvalidCredentialsErrorDialog(final Activity activity,
+                                            final AVA88GatewayInfo ava88GatewayInfo,
+                                            final GatewayLoginDialogCallback callback) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_gateway_error)
                 .setMessage(R.string.msg_invalid_gateway_credentials)
@@ -111,6 +114,7 @@ public class DialogUtilities {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                callback.onInvalidCredentials(ava88GatewayInfo);
                             }
                         });
         return dialogBuilder.create();
@@ -120,8 +124,10 @@ public class DialogUtilities {
     /**
      * The helper method to show gateway invalid credentials error alert dialog.
      */
-    public static void showGatewayInvalidCredentialsErrorDialog(final Activity activity, AVA88GatewayInfo ava88GatewayInfo) {
-        DialogUtilities.getGatewayInvalidCredentialsErrorDialog(activity,ava88GatewayInfo).show();
+    public static void showGatewayInvalidCredentialsErrorDialog(final Activity activity,
+                                                                AVA88GatewayInfo ava88GatewayInfo,
+                                                                GatewayLoginDialogCallback callback) {
+        DialogUtilities.getGatewayInvalidCredentialsErrorDialog(activity,ava88GatewayInfo,callback).show();
     }
 
 
@@ -132,7 +138,7 @@ public class DialogUtilities {
 
     public interface GatewayLoginDialogCallback{
         void onLogin(String user, String password);
-        void onInvalidCredentials(String user);
+        void onInvalidCredentials(AVA88GatewayInfo ava88GatewayInfo);
     }
 
     /**
@@ -143,6 +149,9 @@ public class DialogUtilities {
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_gateway_login,null);
         final EditText usernameEditText = (EditText) view.findViewById(R.id.usernameEditText);
         final EditText passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        if(user!=null && user.length()>0){
+            usernameEditText.setText(user);
+        }
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.dialog_login)
                 .setView(view)
