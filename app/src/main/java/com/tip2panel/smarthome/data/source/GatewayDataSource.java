@@ -60,6 +60,17 @@ public interface GatewayDataSource {
     interface NodeChangeLocationsCallback{
         void onNodeChangeLocationsDone();
     }
+
+    interface InclusionCallback{
+        int INCLUSION_ADDING=1;
+        int INCLUSION_REMOVING=2;
+        int INCLUSION_FORCEADDING=20;
+        void onBusy(int action);
+        void onCanceled(int action);
+        void onDone(int action, ZNode zNode);
+        void onFailure();
+    }
+
     void changeValue(ZNode node, String zNodeValueKey, int instance);
 
     void connectGateway(AVA88GatewayInfo ava88GatewayInfo,
@@ -89,6 +100,8 @@ public interface GatewayDataSource {
 
     void getLocations(final LocationsCallback callback);
 
+    void getLatestLog(final InclusionCallback callback);
+
     void checkNetworkState(Context context, final CheckNetworkStateCallback callback);
 
     void addLocation(String location,final LocationsCallback callback);
@@ -98,4 +111,9 @@ public interface GatewayDataSource {
 
     void removeLocation(int id,final  LocationsCallback callback);
     void removeLocation(String location,final  LocationsCallback callback);
+
+    void startInclusion();
+    void startExclusion();
+    void cancelInclusionAction();
+
 }

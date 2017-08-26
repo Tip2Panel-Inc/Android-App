@@ -34,6 +34,7 @@
         <activity android:name=".devices.DevicesActivity"/>
         <activity android:name=".devices.editMode.DevicesEditModeActivity"/>
         <activity android:name=".dashboard.DashboardActivity"/>
+        <activity android:name=".discovery.DiscoveryActivity"/>
     </application>
 
 </manifest>

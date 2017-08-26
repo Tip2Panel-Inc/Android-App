@@ -351,4 +351,32 @@ public class DialogUtilities {
                                                  final ChangeLocationDialogCallback callback) {
         DialogUtilities.getChangeLocationsDialog(activity,locations,location, callback).show();
     }
+
+
+
+
+    /**
+     * The dialog that shows Device Discovery Result.
+     */
+    public static AlertDialog getDeviceDiscoveryResultDialog(final Activity activity,final String message) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_device_discovery)
+                .setMessage(message)
+                .setCancelable(false).setPositiveButton(R.string.dialog_ok, new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+        return dialogBuilder.create();
+    }
+
+
+    /**
+     * The helper method to show device discovery alert dialog.
+     */
+    public static void showDeviceDiscoveryResultDialog(final Activity activity, final String message) {
+        DialogUtilities.getDeviceDiscoveryResultDialog(activity,message).show();
+    }
 }

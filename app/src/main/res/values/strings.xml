@@ -9,6 +9,12 @@
     <string name="gateway_finder">Gateway Finder</string>
     <string name="gateway_found">Gateway(s) Found</string>
 
+    <string name="inclusion_mode">Inclusion Mode</string>
+    <string name="exclusion_mode">Exclusion Mode</string>
+
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="widget_name">
         <item>AIRCONDITIONER</item>
@@ -45,6 +51,14 @@
     <string name="logout">Logout</string>
 
     <string name="gateway_discovery_hint">Shows the Gateways available in your network. \n(Clicking on the gateway will require authentication)</string>
+    <string name="device_inclusion_hint">
+        Press START to start inclusion process.
+        \nThis will set the gateway in inclusion mode.
+        \nThen press the inclusion button as instructed in the device manual.</string>
+    <string name="device_exclusion_hint">
+        Press START to start removal process.
+        \nThis will set the gateway in exclusion mode.
+        \nThen press the inclusion button as instructed in the device manual.</string>
     <string name="device_discovery_hint">Shows the devices ready for pairing and setup. \n(Successful pairing automatically adds the\n deviceto Orphan Devices)</string>
     <string name="dashboard_devices_hint">These are the devices in your network. \n Devices are organized by room in the DEVICES menu.</string>
     <string name="title_activity_sign_in">Sign in</string>
@@ -106,5 +120,13 @@
 
     <string name="gateway_username">Gateway Username</string>
     <string name="gateway_password">Gateway Password</string>
+
+    <string name="dialog_device_discovery">Device Discovery</string>
+    <string name="msg_device_inclusion_canceled">Inclusion process canceled/ended without detecting the device to be removed!</string>
+    <string name="msg_device_exclusion_canceled">Exclusion process canceled/ended without detecting the device to be removed!</string>
+    <string name="msg_device_inclusion_success">Inclusion process successfull!\n%1$s (node %2$d) has been added</string>
+    <string name="msg_device_exclusion_success">Exclusion process successfull!\n Node %1$d has been removed</string>
+    <string name="msg_device_discovery_error">An error occured! Please try again.</string>
+
 
 </resources>

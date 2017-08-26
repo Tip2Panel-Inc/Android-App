@@ -147,6 +147,7 @@ public class AVA88Gateway{
     public static final int COMMAND_UPDATE_CAMERA_SETTING=96;
     public static final int COMMAND_START_CAMERA_CONNECTION=97;
     public static final int COMMAND_STOP_CAMERA_CONNECTION=98;
+    public static final int COMMAND_GET_SYS_LOG=99;
     public static final SparseArray<String> command= new SparseArray<String>();
     static{
         command.put(COMMAND_BASE,"");
@@ -170,6 +171,7 @@ public class AVA88Gateway{
         command.put(COMMAND_SET_NODE_LOCATION,"/nodepost.html ");
         command.put(COMMAND_SET_NODE_ICON,"/nodepost.html ");
         command.put(COMMAND_GET_GATEWAY_PRIVATE_IP,"/private_ip.cgi ");
+        command.put(COMMAND_GET_SYS_LOG,"/sys_log.cgi ");
     }
 
     public AVA88Gateway(AVA88GatewayInfo ava88GatewayInfo){
@@ -690,58 +692,191 @@ public class AVA88Gateway{
         sendCommandGet(uri,mCallback);
     }
 
-    public void startInclusion(final AVA88GatewayListener callback){
+    public void startInclusion(){
         String body = "fun=addd";
         //TODO: Add code for sending and receiving request.
         String uri = AVA88Gateway.command.get(COMMAND_START_ADD_NODE_PROCESS);
         Callback mCallback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.onInclusionExlusionProcessEnded(4,null);
+
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                callback.onInclusionExlusionProcessEnded(0,null);
+                //TODO: Add action
             }
         };
         sendCommand(uri,body,mCallback);
     }
 
-    public void startExclusion(final AVA88GatewayListener callback){
+    public void startExclusion(){
         String body = "fun=remd";
         String uri = AVA88Gateway.command.get(COMMAND_START_REMOVE_NODE_PROCESS);
         Callback mCallback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.onInclusionExlusionProcessEnded(4,null);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                callback.onInclusionExlusionProcessEnded(0,null);
+                //TODO:ADD action
             }
         };
         sendCommand(uri,body,mCallback);
     }
 
-    public void cancelInclusionExclusion(final AVA88GatewayListener callback){
+    public void cancelInclusionExclusion(){
         String body = "fun=cancel";
         //TODO: Add code for sending and receiving request.
         String uri = AVA88Gateway.command.get(COMMAND_CANCEL_ADD_REMOVE_NODE_PROCESS);
         Callback mCallback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.onInclusionExlusionProcessEnded(4,null);
+
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                callback.onInclusionExlusionProcessEnded(3,null);
+                //TODO: Add action
             }
         };
         sendCommand(uri,body,mCallback);
 
+    }
+
+    public interface InclusionCallback{
+        int INCLUSION_ADDING=1;
+        int INCLUSION_REMOVING=2;
+        int INCLUSION_FORCEADDING=20;
+        void onBusy(int action);
+        void onCanceled(int action);
+        void onDone(int action, int nodeId);
+        void onFailure();
+    }
+
+    public void getSyslogLatest(final InclusionCallback callback){
+        String uri = AVA88Gateway.command.get(COMMAND_GET_SYS_LOG);
+        Callback mCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //TODO:Handle error
+                callback.onFailure();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //Handle xml response here
+                if (response.code() == 200) {
+                    Log.d("SYS LOG", "parsing SYS LOG");
+                    try {
+                        //request returns XML of all nodes matching the locations
+                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder builder = factory.newDocumentBuilder();
+                        InputStream is = response.body().byteStream();
+                        Document nodesDocument = builder.parse(is);
+                        nodesDocument.getDocumentElement().normalize();
+                        // get the active state  in XML by checking the name "admin"
+                        NodeList activeState = nodesDocument.getElementsByTagName("admin");
+
+                        // get all logs by getting sys_log elements
+                        NodeList sysLogs = nodesDocument.getElementsByTagName("sys_log");
+                        int timeStamp=0;
+                        int actionId=-1;
+                        int detailId=-1;
+                        int nodeId=0;
+                        int errorId=-1;
+                        boolean active=false;
+                        if (sysLogs.item(0)!=null){
+                            Element sysLog = (Element) sysLogs.item(0);
+                            NodeList logs = sysLog.getElementsByTagName("log");
+                            Element lastLog=null;
+                            if(logs!=null)
+                                lastLog= (Element) logs.item(logs.getLength()-1);
+
+                            if(lastLog!=null) {
+                                Log.d("SysLOG", "Time " + lastLog.getAttribute("time"));
+                                try {
+                                    timeStamp = Integer.parseInt(lastLog.getAttribute("time"));
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                                NodeList actualLogs = lastLog.getElementsByTagName("admin_function");
+                                Element actualLog=null;
+                                if(actualLogs!=null&&actualLogs.getLength()>0)
+                                    actualLog=(Element)actualLogs.item(0);
+                                if (actualLog != null) {
+                                    String actionId_str = actualLog.getAttribute("action_id");
+                                    String detailId_str = actualLog.getAttribute("detail_id");
+                                    String nodeId_str = actualLog.getAttribute("node_id");
+                                    if (actionId_str != null || actionId_str.length() > 0)
+                                        try {
+                                            actionId = Integer.parseInt(actionId_str);
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+                                    if (detailId_str != null || detailId_str.length() > 0)
+                                        try {
+                                            detailId = Integer.parseInt(detailId_str);
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                        }
+                                    if (nodeId_str != null || nodeId_str.length() > 0)
+                                        try {
+                                            nodeId = Integer.parseInt(nodeId_str);
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                }
+                            }
+
+
+                        }
+
+                        if (activeState.item(0)!=null && activeState.item(0).getFirstChild()!=null){
+                            if (((Element)activeState.item(0))
+                                    .getAttribute("active")
+                                    .toString().equals("false")) { //not busy, done
+                                active=false;
+                                if(detailId!=-1){
+                                    if((nodeId==0 || nodeId==255)&&(detailId==8|| detailId==3)){
+                                        callback.onCanceled(actionId);
+                                    }
+                                    else{
+
+                                        callback.onDone(actionId,nodeId);
+                                    }
+                                }
+                            }
+                            else{
+                                active=true;
+                                switch (actionId){//busy
+                                    case 1://adding
+                                        callback.onBusy(actionId);
+                                        break;
+                                    case 20://force adding
+                                        callback.onBusy(actionId);
+                                        break;
+                                    case 2://removing
+                                        callback.onBusy(actionId);
+                                        break;
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        // if an exception occurred, log it
+                        e.printStackTrace();
+                    }
+                    //TODO:callback
+                }
+            }
+
+        };
+        sendCommandGet(uri, mCallback);
     }
 
     private void sendCommand(String IP,int port, String uri,String body, Callback mCallback){
@@ -963,6 +1098,125 @@ public class AVA88Gateway{
         sendCommand(uri,body,mCallback);
     }
 
+    public interface OnFetchNodeListener{
+        void onFound(ZNode node);
+        void onNotFound(int id);
+    }
+
+
+    public  void fetchNode(final int nodeId, final OnFetchNodeListener handler) {
+        String body = "id="+nodeId;
+        String uri = AVA88Gateway.command.get(COMMAND_POLL_TARGET_NODE_STATE);
+        Callback mCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                handler.onNotFound(nodeId);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    try {
+                        boolean found=false;
+                        //request returns XML of all nodes matching the locations
+                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder builder = factory.newDocumentBuilder();
+                        InputStream is = response.body().byteStream();
+                        Document nodesDocument = builder.parse(is);
+                        nodesDocument.getDocumentElement().normalize();
+                        // get all the nodes in XML by checking the name "node"
+                        NodeList items = nodesDocument.getElementsByTagName("node");
+                        Log.d("NODES LIST", "NODES: "+items.getLength());
+
+                        //Process each values for each nodes
+                        for (int k = 0; k < items.getLength(); k++) {
+                            Element item = (Element) items.item(k);
+                            int id=0;
+                            //get the properties of the each node
+                            try {
+                                 id = Integer.parseInt(item.getAttribute("id"));
+                                if (id == nodeId) {
+                                    found = true;
+                                }
+                            } catch (NumberFormatException ex) {
+                                ex.printStackTrace();
+                            }
+                            if (found) {
+                                String location = item.getAttribute("location") + "";
+                                String btype = item.getAttribute("btype") + "";
+                                String gtype = item.getAttribute("gtype") + "";
+                                String name = item.getAttribute("name") + "";
+                                String manufacturer = item.getAttribute("manufacturer") + "";
+                                String product = item.getAttribute("product") + "";
+                                String statusStr = item.getAttribute("status") + "";
+
+                                //Build the Node Information
+                                ZNode z = new ZNode(id, name, product, manufacturer);
+                                try {
+                                    z.nodeStatus = ZNodeStatus.deviceStatus.get(statusStr);
+                                } catch (NullPointerException ex) {
+                                    ex.printStackTrace();
+                                } finally {
+                                    z.nodeStatus = 0;
+                                }
+                                z.nodeStatusString = statusStr;
+                                z.nodeBType = btype;
+                                z.nodeGType = gtype;
+                                z.nodeLocation = location;
+
+                                NodeList values;
+                                int prod = ZNodeProduct.nodeZNodeProducttoInt(product);
+                                Log.d("NODES LIST", item.getAttribute("id") + " with product id " + prod + " Detected");
+
+                                values = item.getElementsByTagName("value");
+                                Log.d("NODES LIST", "Values: " + values.getLength());
+                                //iterate all values found in each node
+                                for (int j = 0; j < values.getLength(); j++) {
+                                    Element value = (Element) values.item(j);
+                                    String nodeValueClass = value.getAttribute("class");
+                                    String nodeValueGenre = value.getAttribute("genre");
+                                    String nodeValueType = value.getAttribute("type");
+                                    Log.d("NODES LIST", "Values: class=" + nodeValueClass + "instance " + value.getAttribute("instance"));
+                                    int nodeValueInstance;
+                                    int nodeValueIndex;
+                                    try {
+                                        nodeValueInstance = Integer.parseInt(value.getAttribute("instance"));
+                                        nodeValueIndex = Integer.parseInt(value.getAttribute("index"));
+                                    } catch (NumberFormatException ne) {
+                                        ne.printStackTrace();
+                                        nodeValueInstance = 1;
+                                        nodeValueIndex = 0;
+                                    }
+                                    String nodeValueValue = "";
+                                    if (value.getChildNodes().getLength() > 0)
+                                        nodeValueValue = value.getChildNodes().item(0).getNodeValue();
+
+                                    //create a value instance
+                                    ZNodeValue myZNodeValue = new ZNodeValue(nodeValueClass,
+                                            nodeValueGenre,
+                                            nodeValueType,
+                                            nodeValueInstance,
+                                            nodeValueIndex,
+                                            nodeValueValue);
+                                    //insert the value to the node with key = class+index
+                                    z.addZNodeValue(nodeValueClass + nodeValueIndex, myZNodeValue);
+                                }
+                                handler.onFound(z);
+                                break;
+                            }
+                        }
+                        if (!found){
+                            handler.onNotFound(nodeId);
+                        }
+                    } catch (Exception e) {
+                        // if an exception occurred, log it
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        sendCommand(uri,body,mCallback);
+    }
     //Interfaces from this Class
     public interface AVA88GatewayListener{
         int INCLUSION_SUCCESS=0;

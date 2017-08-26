@@ -1,4 +1,4 @@
-package com.tip2panel.smarthome.gateway;
+package com.tip2panel.smarthome.discovery;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,24 +6,21 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.dashboard.DashboardActivity;
 import com.tip2panel.smarthome.data.source.SmartHomeRepository;
 import com.tip2panel.smarthome.data.source.local.GatewayLocalDataSource;
 import com.tip2panel.smarthome.devices.DevicesActivity;
-import com.tip2panel.smarthome.discovery.DiscoveryActivity;
+import com.tip2panel.smarthome.gateway.GatewayActivity;
 import com.tip2panel.smarthome.utils.ActivityUtils;
 import com.tip2panel.smarthome.utils.BaseActivity;
 
-public class GatewayActivity extends BaseActivity{
-    private GatewayPresenter mGatewayPresenter;
+public class DiscoveryActivity extends BaseActivity{
+    private DiscoveryPresenter mDiscoveryPresenter;
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -51,20 +48,20 @@ public class GatewayActivity extends BaseActivity{
 
 
 
-        setTitle(getString(R.string.gateway));
-        GatewayFragment gatewayFragment =
-                (GatewayFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (gatewayFragment == null) {
+        setTitle(getString(R.string.device_discovery));
+        DiscoveryFragment discoveryFragment =
+                (DiscoveryFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (discoveryFragment == null) {
             // Create the fragment
-            gatewayFragment = GatewayFragment.newInstance();
+            discoveryFragment = DiscoveryFragment.newInstance();
             ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), gatewayFragment, R.id.fragment_container);
+                    getSupportFragmentManager(), discoveryFragment, R.id.fragment_container);
         }
 
-        mGatewayPresenter = new GatewayPresenter(
+        mDiscoveryPresenter = new DiscoveryPresenter(
                 SmartHomeRepository.getInstance(
                         GatewayLocalDataSource.getInstance(getApplicationContext())),
-                gatewayFragment);
+                discoveryFragment);
 
     }
 
@@ -77,13 +74,15 @@ public class GatewayActivity extends BaseActivity{
                         int id = item.getItemId();
                         Intent intent=null;
                         if (id ==  R.id.nav_dashboard) {
-                            intent = new Intent(GatewayActivity.this, DashboardActivity.class);
+                            intent = new Intent(DiscoveryActivity.this, DashboardActivity.class);
                         } else if (id == R.id.nav_devices) {
-                            intent = new Intent(GatewayActivity.this, DevicesActivity.class);
+                            intent = new Intent(DiscoveryActivity.this, DevicesActivity.class);
 
                         } else if (id == R.id.nav_devdisco) {
-                            intent = new Intent(GatewayActivity.this, DiscoveryActivity.class);
+
+
                         } else if (id == R.id.nav_gateway) {
+                            intent = new Intent(DiscoveryActivity.this, GatewayActivity.class);
 
                         } else if (id == R.id.nav_settings) {
 

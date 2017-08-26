@@ -17,6 +17,7 @@ import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.data.source.SmartHomeRepository;
 import com.tip2panel.smarthome.data.source.local.GatewayLocalDataSource;
 import com.tip2panel.smarthome.devices.DevicesActivity;
+import com.tip2panel.smarthome.discovery.DiscoveryActivity;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
 import com.tip2panel.smarthome.utils.ActivityUtils;
 import com.tip2panel.smarthome.utils.BaseActivity;
@@ -82,7 +83,8 @@ public class DashboardActivity extends BaseActivity{
                             intent =
                                     new Intent(DashboardActivity.this, DevicesActivity.class);
                         } else if (id == R.id.nav_devdisco) {
-
+                            intent =
+                                    new Intent(DashboardActivity.this, DiscoveryActivity.class);
                         } else if (id == R.id.nav_gateway) {
                             intent =
                                     new Intent(DashboardActivity.this, GatewayActivity.class);

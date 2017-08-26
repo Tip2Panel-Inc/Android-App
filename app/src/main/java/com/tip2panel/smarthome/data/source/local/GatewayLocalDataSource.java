@@ -336,6 +336,55 @@ public class GatewayLocalDataSource implements GatewayDataSource {
     }
 
     @Override
+    public void getLatestLog(final InclusionCallback callback) {
+        mAva88Gateway.getSyslogLatest(new AVA88Gateway.InclusionCallback(){
+
+            @Override
+            public void onBusy(int action) {
+                callback.onBusy(action);
+            }
+
+            @Override
+            public void onCanceled(int action) {
+                Log.d("DISCOVERY Source","CANCELLED");
+                callback.onCanceled(action);
+            }
+
+            @Override
+            public void onDone(final int action, final int nodeId) {
+                Log.d("DISCOVERY Source","DONE");
+                if(action == INCLUSION_ADDING || action == INCLUSION_FORCEADDING) {
+                    mAva88Gateway.fetchNode(nodeId, new AVA88Gateway.OnFetchNodeListener() {
+
+                        @Override
+                        public void onFound(ZNode node) {
+                            callback.onDone(action, node);
+                        }
+
+                        @Override
+                        public void onNotFound(int id) {
+                            ZNode zNode=new ZNode();
+                            zNode.nodeID=nodeId;
+                            zNode.nodeProductStr="Unknown";
+                        }
+                    });
+                }
+                else{
+                    ZNode zNode=new ZNode();
+                    zNode.nodeID=nodeId;
+                    callback.onDone(action,zNode);
+                }
+
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
     public void checkNetworkState(Context context, CheckNetworkStateCallback callback) {
         if(NetworkUtilities.isWifiOnline(context)){
             callback.onWifiConnected();
@@ -410,6 +459,21 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                 removeLocation(id, callback);
             }
         });
+    }
+
+    @Override
+    public void startInclusion() {
+        mAva88Gateway.startInclusion();
+    }
+
+    @Override
+    public void startExclusion() {
+        mAva88Gateway.startExclusion();
+    }
+
+    @Override
+    public void cancelInclusionAction() {
+        mAva88Gateway.cancelInclusionExclusion();
     }
 
 

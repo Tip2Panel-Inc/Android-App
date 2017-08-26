@@ -115,6 +115,11 @@ public class SmartHomeRepository implements GatewayDataSource {
     }
 
     @Override
+    public void getLatestLog(InclusionCallback callback) {
+        mGatewayLocalDataSource.getLatestLog(callback);
+    }
+
+    @Override
     public void checkNetworkState(Context context, CheckNetworkStateCallback callback) {
         mGatewayLocalDataSource.checkNetworkState(context, callback);
     }
@@ -138,6 +143,21 @@ public class SmartHomeRepository implements GatewayDataSource {
     @Override
     public void removeLocation(String location, LocationsCallback callback) {
         mGatewayLocalDataSource.removeLocation(location, callback);
+    }
+
+    @Override
+    public void startInclusion() {
+        mGatewayLocalDataSource.startInclusion();
+    }
+
+    @Override
+    public void startExclusion() {
+        mGatewayLocalDataSource.startExclusion();
+    }
+
+    @Override
+    public void cancelInclusionAction() {
+        mGatewayLocalDataSource.cancelInclusionAction();
     }
 
 }
