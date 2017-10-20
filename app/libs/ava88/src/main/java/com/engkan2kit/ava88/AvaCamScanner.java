@@ -1,11 +1,9 @@
 package com.engkan2kit.ava88;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
@@ -13,43 +11,42 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Setsuna F. Seie on 28/04/2017.
  */
 
-public class AVA88GatewayScanner extends AsyncTask<AVA88GatewayInfo,Void,ArrayList<AVA88GatewayInfo>> {
+public class AvaCamScanner extends AsyncTask<AvaCamInfo,Void,ArrayList<AvaCamInfo>> {
     private int response = 0;
     private Context mContext;
-    private AVA88GatewayInfo infoToCompare;
+    private AvaCamInfo infoToCompare;
     Boolean found = false;
-    private GatewayScannerListener mGatewayScannerListener=null;
+    private AvaCamScannerListener mAvaCamScannerListener=null;
 
-    public interface GatewayScannerListener {
-        void onGatewayScannerDone(ArrayList<AVA88GatewayInfo> gatewayIPs);
-        void onGatewayFound(AVA88GatewayInfo mAVA88GatewayInfo);
-        void onGatewayNotFound();
+    public interface AvaCamScannerListener {
+        void onAvaCamScannerDone(ArrayList<AvaCamInfo> avaCamInfos);
+        void onAvaCamFound(AvaCamInfo mAvaCamInfo);
+        void onAvaCamNotFound();
     }
 
-    public AVA88GatewayScanner(Context context,GatewayScannerListener gatewayScannerListener ){
+    public AvaCamScanner(Context context, AvaCamScannerListener avaCamScannerListener ){
         this.mContext = context;
-        this.mGatewayScannerListener = gatewayScannerListener;
+        this.mAvaCamScannerListener = avaCamScannerListener;
     }
 
     @Override
-    protected ArrayList<AVA88GatewayInfo> doInBackground(AVA88GatewayInfo... params) {
+    protected ArrayList<AvaCamInfo> doInBackground(AvaCamInfo... params) {
         Log.d("AVA-Discovery","Checking Internet!");
         infoToCompare = params[0];
-        ArrayList<AVA88GatewayInfo> gatewayIps = new ArrayList<>();
+        ArrayList<AvaCamInfo> avaCamInfos = new ArrayList<>();
         ConnectivityManager connectionManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiCheck;
         wifiCheck = connectionManager.getActiveNetworkInfo();
         if (wifiCheck!=null) {
-            Log.d("AVA-Discovery","internet");
+            Log.d("AVA-CAM Discovery","internet");
             //if wifi is connected, look for online gateway
             if (wifiCheck.getType() == ConnectivityManager.TYPE_WIFI) {
-                Log.d("AVA-Discovery","WIFI internet");
+                Log.d("AVA-CAM Discovery","WIFI internet");
                 //TODO: Search local network for valid AVA-88 gateway.
                 DatagramSocket c=null;
                 try {
@@ -59,14 +56,14 @@ public class AVA88GatewayScanner extends AsyncTask<AVA88GatewayInfo,Void,ArrayLi
                     c.setBroadcast(true);
                     c.setSoTimeout(3000);
 
-                    byte[] sendData = "WHOIS_AVA_ZWAVE#".getBytes();
+                    byte[] sendData = "WHOIS_AVA_CAM#".getBytes();
 
                     //Try the 255.255.255.255 first
                     try {
-                        Log.d("AVA-Discovery",">>>Creating Datagram Packet");
+                        Log.d("AVA-CAM Discovery",">>>Creating Datagram Packet");
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 10000);
                         c.send(sendPacket);
-                        Log.d("AVA Discovery", ">>> Request packet sent to: 255.255.255.255 (DEFAULT)");
+                        Log.d("AVA-CAM Discovery", ">>> Request packet sent to: 255.255.255.255 (DEFAULT)");
                     }
                     catch (Exception e) {
                     }
@@ -80,25 +77,25 @@ public class AVA88GatewayScanner extends AsyncTask<AVA88GatewayInfo,Void,ArrayLi
                         return null;
                     }
                     //We have a response
-                    Log.d("AVA Discovery",">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                    Log.d("AVA-CAM Discovery",">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
 
                     //Check if the message is correct
                     String message = new String(receivePacket.getData()).trim();
-                    if (message.contains("RE_WHOIS_AVA_ZWAVE")) {
+                    if (message.contains("RE_WHOIS_AVA_CAM")) {
                         //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                        Log.d("AVA Discovery", message);
-                        Log.d("AVA Discovery", "AVA-88 Gateway Discovered!" + receivePacket.getAddress());
+                        Log.d("AVA-CAM Discovery", message);
+                        Log.d("AVA-CAM Discovery", "AVA Cam Discovered!" + receivePacket.getAddress());
                         String serverIP = receivePacket.getAddress().getHostAddress().toString();
                         //int macIndex=message.indexOf("mac=");
                         //String mac= message.substring(macIndex+4,message.indexOf('&',macIndex));
-                        AVA88GatewayInfo mAVA88GatewayInfo = new AVA88GatewayInfo(message + "&ipv4=" + serverIP + "&");
+                        AvaCamInfo mAvaCamInfo = new AvaCamInfo(message + "&ipv4=" + serverIP + "&");
                         if (infoToCompare==null){
-                            gatewayIps.add(mAVA88GatewayInfo);
+                            avaCamInfos.add(mAvaCamInfo);
                         }else {
-                            if (infoToCompare.hardwareAddress.equals(mAVA88GatewayInfo.hardwareAddress)) {
-                                gatewayIps.add(mAVA88GatewayInfo);
+                            if (infoToCompare.hardwareAddress.equals(mAvaCamInfo.hardwareAddress)) {
+                                avaCamInfos.add(mAvaCamInfo);
                                 found = true;
-                                return gatewayIps;
+                                return avaCamInfos;
                             }
                         }
 
@@ -106,33 +103,33 @@ public class AVA88GatewayScanner extends AsyncTask<AVA88GatewayInfo,Void,ArrayLi
                     }
                     c.receive(receivePacket);
                     //We have a response
-                    Log.d("AVA Discovery",">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+                    Log.d("AVA-CAM Discovery",">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
 
                     //Check if the message is correct
                     message = new String(receivePacket.getData()).trim();
-                    if (message.contains("RE_WHOIS_AVA_ZWAVE")) {
+                    if (message.contains("RE_WHOIS_AVA_CAM")) {
                         //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                        Log.d("AVA Discovery",message);
-                        Log.d("AVA Discovery","AVA-88 Gateway Discovered!" + receivePacket.getAddress());
+                        Log.d("AVA-CAM Discovery", message);
+                        Log.d("AVA-CAM Discovery", "AVA Cam Discovered!" + receivePacket.getAddress());
                         String serverIP = receivePacket.getAddress().getHostAddress().toString();
                         //int macIndex=message.indexOf("mac=");
                         //String mac= message.substring(macIndex+4,message.indexOf('&',macIndex));
 
-                        AVA88GatewayInfo mAVA88GatewayInfo = new AVA88GatewayInfo(message + "&ipv4=" + serverIP + "&");
+                        AvaCamInfo mAvaCamInfo = new AvaCamInfo(message + "&ipv4=" + serverIP + "&");
                         if (infoToCompare==null){
-                            gatewayIps.add(mAVA88GatewayInfo);
+                            avaCamInfos.add(mAvaCamInfo);
                         }else {
-                            if (infoToCompare.hardwareAddress.equals(mAVA88GatewayInfo.hardwareAddress)) {
-                                gatewayIps.add(mAVA88GatewayInfo);
+                            if (infoToCompare.hardwareAddress.equals(mAvaCamInfo.hardwareAddress)) {
+                                avaCamInfos.add(mAvaCamInfo);
                                 found = true;
-                                return gatewayIps;
+                                return avaCamInfos;
                             }
                         }
 
                     }
                     c.close();
                 } catch (IOException ex) {
-                    Log.d("AVA-Discovery", ex.toString());
+                    Log.d("AVA-CAM Discovery", ex.toString());
                 }
                 finally {
                     if(c!=null){
@@ -148,25 +145,25 @@ public class AVA88GatewayScanner extends AsyncTask<AVA88GatewayInfo,Void,ArrayLi
 
 
         }
-        return gatewayIps;
+        return avaCamInfos;
     }
 
 
 
-    protected void onPostExecute(ArrayList<AVA88GatewayInfo> gatewayIPs){
+    protected void onPostExecute(ArrayList<AvaCamInfo> avaCamInfos){
         //Scanner response.
         //IF mac length ==12 this is an IP query
         if (infoToCompare!=null){
             if (found)
-                mGatewayScannerListener.onGatewayFound(gatewayIPs.get(0));
+                mAvaCamScannerListener.onAvaCamFound(avaCamInfos.get(0));
             else
-                mGatewayScannerListener.onGatewayNotFound();
+                mAvaCamScannerListener.onAvaCamNotFound();
         }
         else {
-            if (mGatewayScannerListener != null) {
-                Log.d("AVA Discovery", gatewayIPs.toString());
+            if (mAvaCamScannerListener != null) {
+                Log.d("AVA Discovery", avaCamInfos.toString());
             }
-            mGatewayScannerListener.onGatewayScannerDone(gatewayIPs);
+            mAvaCamScannerListener.onAvaCamScannerDone(avaCamInfos);
         }
 
     }

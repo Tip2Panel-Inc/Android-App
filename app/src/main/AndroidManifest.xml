@@ -35,6 +35,9 @@
         <activity android:name=".devices.editMode.DevicesEditModeActivity"/>
         <activity android:name=".dashboard.DashboardActivity"/>
         <activity android:name=".discovery.DiscoveryActivity"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4781de545827cf494b606d8611c9bf61205b72f2" />
     </application>
 
 </manifest>
