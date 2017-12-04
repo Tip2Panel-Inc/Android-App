@@ -75,6 +75,10 @@ public class ZNode {
         nodeValues.put(key,mZNodeValue);
     }
 
+    public Map<String,ZNodeValue> getNodeValues(){
+        return nodeValues;
+    }
+
     public int getState(){
         return nodeStatus;
     }
