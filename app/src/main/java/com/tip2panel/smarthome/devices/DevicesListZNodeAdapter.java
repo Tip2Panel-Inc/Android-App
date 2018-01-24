@@ -1,6 +1,7 @@
 package com.tip2panel.smarthome.devices;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.engkan2kit.ava88.ZNodeValue;
 import com.google.android.flexbox.FlexboxLayout;
 import com.tip2panel.smarthome.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,8 @@ import static java.lang.Math.min;
 
 public class DevicesListZNodeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG=DevicesListZNodeAdapter.class.getSimpleName();
-    private List<ZNode> mList;
+    @NonNull
+    private final ArrayList<ZNode> mList;
     private boolean mShowCheckBox=false;
     public interface DeviceListListener{
         void onDeviceListCheckBoxChecked(int nodeId);
@@ -46,11 +49,11 @@ public class DevicesListZNodeAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private final DeviceListListener mListener;
 
-    public DevicesListZNodeAdapter(List<ZNode> list, DeviceListListener listener) {
+    public DevicesListZNodeAdapter(ArrayList<ZNode> list, DeviceListListener listener) {
         this(list, listener,false);
     }
 
-    public DevicesListZNodeAdapter(List<ZNode> list, DeviceListListener listener, boolean showCheckBox) {
+    public DevicesListZNodeAdapter(ArrayList<ZNode> list, DeviceListListener listener, boolean showCheckBox) {
         this.mList = list;
         this.mListener = listener;
         this.mShowCheckBox=showCheckBox;
@@ -69,6 +72,7 @@ public class DevicesListZNodeAdapter extends RecyclerView.Adapter<RecyclerView.V
         ((DeviceViewHolder) holder).bind(object,mListener);
 
     }
+
     @Override
     public int getItemCount() {
         if (mList == null)
@@ -86,6 +90,11 @@ public class DevicesListZNodeAdapter extends RecyclerView.Adapter<RecyclerView.V
         return 0;
     }
 
+    public void setItems(@NonNull final ArrayList<ZNode> items)
+    {
+        mList.clear();
+        mList.addAll(items);
+    }
 
     public static class DeviceViewHolder extends RecyclerView.ViewHolder {
         private FlexboxLayout mFlexboxLayout;
@@ -102,7 +111,6 @@ public class DevicesListZNodeAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
             mDeviceCheckBox = (CheckBox) itemView.findViewById(R.id.deviceCheckBox);
             mDeviceName = (TextView) itemView.findViewById(R.id.deviceNameTextView);
-            mFlexboxLayout = (FlexboxLayout) itemView.findViewById(R.id.deviceValueFlexboxLayout);
             mContext = itemView.getContext();
             mShowCheckBox=showCheckBox;
         }
