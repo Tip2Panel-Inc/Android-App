@@ -90,7 +90,7 @@ public class DevicesListZNodeValueAdapter extends RecyclerView.Adapter<RecyclerV
         public DeviceViewHolder(View itemView) {
             super(itemView);
             mDeviceName = (TextView) itemView.findViewById(R.id.deviceNameTextView);
-            mFlexboxLayout = (FlexboxLayout) itemView.findViewById(R.id.deviceValueFlexboxLayout);
+            //mFlexboxLayout = (FlexboxLayout) itemView.findViewById(R.id.deviceValueFlexboxLayout);
             mContext = itemView.getContext();
 
         }

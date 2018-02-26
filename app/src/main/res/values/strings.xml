@@ -87,6 +87,10 @@
     <string name="glass_break">Glass Broken</string>
     <string name="no_event">No Events</string>
 
+    <!-- String Related to Sensor Binary -->
+    <string name="strFalse">False</string>
+    <string name="strTrue">True</string>
+
     <!-- Strings related to Custom Dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">cancel</string>

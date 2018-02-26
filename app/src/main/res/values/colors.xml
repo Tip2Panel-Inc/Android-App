@@ -28,5 +28,7 @@
     <color name="colorTextDisabled">#9799a5</color>
     <color name="colorPageTabBackground">#ffffff</color>
     <color name="colorPageTabIndicator">#40C4FF</color>
+    <color name="colorProductHeaderBackground">#606278</color>
+    <color name="colorProductHeaderText">#ffffff</color>
 
 </resources>

@@ -536,7 +536,7 @@ public class AVA88Gateway{
         Callback mCallback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-               // mAVA88GatewayListener.onInclusionExlusionProcessEnded(4,null);
+               // mAVA88GatewayListener.onInclusionExclusionProcessEnded(4,null);
             }
 
             @Override
@@ -560,12 +560,12 @@ public class AVA88Gateway{
         Callback mCallback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // mAVA88GatewayListener.onInclusionExlusionProcessEnded(4,null);
+                // mAVA88GatewayListener.onInclusionExclusionProcessEnded(4,null);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                // mAVA88GatewayListener.onInclusionExlusionProcessEnded(0,null);
+                // mAVA88GatewayListener.onInclusionExclusionProcessEnded(0,null);
             }
         };
         sendCommand(uri,body,mCallback);
@@ -626,11 +626,21 @@ public class AVA88Gateway{
 
     }
 
-    public void changeValue(final ZNode znode,
+    public void changeValue(ZNodeValue zNodeValue,final AVA88GatewayListener callback)
+    {
+        //TODO: Refactor changeValue()
+        changeValue(zNodeValue.getNodeId(),zNodeValue,zNodeValue.getInstance(),callback);
+    }
+
+    public void changeValue(final ZNode znode, ZNodeValue zNodeValue,int instance, final AVA88GatewayListener callback)
+    {
+        changeValue(znode.nodeID,zNodeValue,instance,callback);
+    }
+    public void changeValue(final int nodeId,
                             ZNodeValue zNodeValue,
                             int instance,
                             final AVA88GatewayListener callback){
-        String body = znode.nodeID+"-"
+        String body = nodeId+"-"
                 +zNodeValue.getValueClass()+"-"
                 +zNodeValue.getValueGenre()+"-"
                 +zNodeValue.getValueType()+"-"
@@ -642,17 +652,18 @@ public class AVA88Gateway{
         Callback mCallback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.onValueChangeResponseListener(znode,false);
+                callback.onValueChangeResponseListener(nodeId,false);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                callback.onValueChangeResponseListener(znode,true);
+                callback.onValueChangeResponseListener(nodeId,true);
             }
         };
         sendCommand(uri,body,mCallback);
 
     }
+
     public interface GatewayConnectionCallback{
         int INVALID_CREDENTIALS=1;
         int NOT_CONNECTED=2;
@@ -1022,14 +1033,14 @@ public class AVA88Gateway{
 
                             //Build the Node Information
                             ZNode z = new ZNode(id,name, product, manufacturer);
-                            try {
-                                z.nodeStatus = ZNodeStatus.deviceStatus.get(statusStr);
-                            }catch(NullPointerException ex){
-                                ex.printStackTrace();
-                            }
-                            finally {
-                                z.nodeStatus=0;
-                            }
+                            //try {
+                            //    z.nodeStatus = ZNodeStatus.deviceStatus.get(statusStr);
+                            //}catch(NullPointerException ex){
+                            //    ex.printStackTrace();
+                            //}
+                            //finally {
+                            //    z.nodeStatus=0;
+                            //}
                             z.nodeStatusString = statusStr;
                             z.nodeBType=btype;
                             z.nodeGType=gtype;
@@ -1045,8 +1056,8 @@ public class AVA88Gateway{
                             }
                             if (insertToNodeList)  {
                                 NodeList values;
-                                int prod = ZNodeProduct.nodeZNodeProducttoInt(product);
-                                Log.d("NODES LIST", item.getAttribute("id") + " with product id " + prod + " Detected");
+                                //int prod = ZNodeProduct.nodeZNodeProducttoInt(product);
+                                Log.d("NODES LIST", item.getAttribute("id") + " Detected");
 
                                 values = item.getElementsByTagName("value");
                                 Log.d("NODES LIST", "Values: " + values.getLength());
@@ -1056,6 +1067,7 @@ public class AVA88Gateway{
                                     String nodeValueClass = value.getAttribute("class");
                                     String nodeValueGenre = value.getAttribute("genre");
                                     String nodeValueType = value.getAttribute("type");
+                                    String nodeValueLable= value.getAttribute("label");
                                     Log.d("NODES LIST", "Values: class=" + nodeValueClass + "instance " + value.getAttribute("instance"));
                                     int nodeValueInstance;
                                     int nodeValueIndex;
@@ -1079,6 +1091,8 @@ public class AVA88Gateway{
                                             nodeValueIndex,
                                             nodeValueValue);
                                     //insert the value to the node with key = class+index
+                                    myZNodeValue.setValueLabel(nodeValueLable);
+                                    myZNodeValue.setNodeId(z.nodeID);
                                     z.addZNodeValue(nodeValueClass + nodeValueIndex, myZNodeValue);
                                 }
 
@@ -1227,7 +1241,8 @@ public class AVA88Gateway{
         void onGetLocationsResponse(List<NodeLocation> locations);
         void onScanNodesDone(List<ZNode> nodes);
         void onValueChangeResponseListener(ZNode mZNode,Boolean isSuccessfull);
-        void onInclusionExlusionProcessEnded(int status, @Nullable ZNode node);
+        void onValueChangeResponseListener(int nodeId,Boolean isSuccessfull);
+        void onInclusionExclusionProcessEnded(int status, @Nullable ZNode node);
     }
 
 

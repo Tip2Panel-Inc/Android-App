@@ -10,6 +10,7 @@ import com.tip2panel.smarthome.dashboard.DashboardContract;
 import com.tip2panel.smarthome.data.source.GatewayDataSource;
 import com.tip2panel.smarthome.data.source.SmartHomeRepository;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 
 import java.util.List;
 
@@ -44,8 +45,8 @@ public class DevicesEditModePresenter implements DevicesEditModeContract.MvpPres
     public void loadDevices(String location) {
         mSmartHomeRepository.getDevices( location,new GatewayDataSource.LoadDevicesCallback() {
             @Override
-            public void onDevicesLoaded(List<ZNode> zNodes) {
-                mDeviceEditModeView.showDevicesList(zNodes);
+            public void onDevicesLoaded(List<DeviceListItem> deviceListItems) {
+                mDeviceEditModeView.showDevicesList(deviceListItems);
             }
 
             @Override

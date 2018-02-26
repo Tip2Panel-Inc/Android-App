@@ -46,7 +46,13 @@ public class ZNode {
     public ZNode(String nodeName, String mNodeProductStr){
         this(nodeName);
         this.nodeProductStr=mNodeProductStr;
-        this.nodeProduct=ZNodeProduct.nodeZNodeProducttoInt(mNodeProductStr);
+        //try {
+        //    this.nodeProduct = ZNodeProduct.nodeZNodeProducttoInt(mNodeProductStr);
+        //}
+        //catch(NullPointerException ex){
+        //    this.nodeProduct=0;
+        //    ex.printStackTrace();
+        //}
     }
 
     public ZNode(String nodeName, String nodeProduct, String nodeManufacturer){

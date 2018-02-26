@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.tip2panel.smarthome.BaseFragment;
 import com.tip2panel.smarthome.R;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 
 import java.util.HashMap;
@@ -143,12 +145,12 @@ public class DevicesPagerFragment extends Fragment implements DevicesPagerContra
     }
 
     @Override
-    public void showDevicesList(List<ZNode> zNodes, String location) {
+    public void showDevicesList(List<DeviceListItem> deviceListItems, String location) {
         DevicesViewsContract.ChildView childView = mChildViews.get(location);
         mChildFragmentManager = checkNotNull(getChildFragmentManager());
         Log.d(TAG,"Number of fragments = " +mChildFragmentManager.getFragments().size());
         if(childView!=null) {
-            childView.showDevicesList(zNodes);
+            childView.showDevicesList(deviceListItems);
         }
     }
 
@@ -213,8 +215,8 @@ public class DevicesPagerFragment extends Fragment implements DevicesPagerContra
     }
 
     @Override
-    public void changeValue(ZNode zNode, String zNodeValueKey, int instance) {
-        mPresenter.changeValue(zNode,zNodeValueKey,instance);
+    public void changeValue(ZNodeValue nodeValue) {
+        mPresenter.changeValue(nodeValue);
     }
 
     @Override

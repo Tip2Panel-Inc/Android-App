@@ -17,17 +17,22 @@ import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.BaseFragment;
 import com.tip2panel.smarthome.R;
+import com.tip2panel.smarthome.devices.DeviceListRecyclerViewAdapter;
 import com.tip2panel.smarthome.devices.DevicesListAdapter;
 import com.tip2panel.smarthome.gateway.GatewayContract;
 import com.tip2panel.smarthome.gateway.GatewayFragment;
 import com.tip2panel.smarthome.gateway.GatewayListAdapter;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.Inflater;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DashboardFragment extends Fragment implements DashboardContract.MvpView{
     private final static String TAG = DashboardFragment.class.getSimpleName();
     private DashboardContract.MvpPresenter mPresenter;
-    private DevicesListAdapter mDevicesListAdapter;
+    private DeviceListRecyclerViewAdapter mDeviceListRecyclerViewAdapter;
     private RecyclerView mDevicesRecyclerView;
     private boolean pause =false;
     Handler handler = new Handler();
@@ -57,30 +62,31 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        mDevicesListAdapter = new DevicesListAdapter(new ArrayList<ZNode>(),
-                mDevicesItemListener);
+        mDeviceListRecyclerViewAdapter = new DeviceListRecyclerViewAdapter(new ArrayList<DeviceListItem>(),
+                mDevicesItemListener,false);
     }
 
-    DevicesListAdapter.DeviceListListener mDevicesItemListener = new DevicesListAdapter.DeviceListListener() {
+    DeviceListRecyclerViewAdapter.DeviceListItemListener mDevicesItemListener = new DeviceListRecyclerViewAdapter.DeviceListItemListener() {
         @Override
-        public void onDeviceListCheckBoxChecked(int nodeId) {
+        public void onDeviceListCheckBoxChecked(String nodeId) {
 
         }
 
         @Override
-        public void onDeviceListCheckBoxUnchecked(int nodeId) {
+        public void onDeviceListCheckBoxUnchecked(String nodeId) {
 
         }
 
         @Override
-        public void onDeviceListItemClick(ZNode item) {
+        public void onDeviceListItemClick(DeviceListItem item) {
             Log.d(TAG,"Device item Clicked!");
         }
 
         @Override
-        public void onDeviceItemChangeValue(ZNode item, String mZNodeValueKey, int instance) {
+        public void onDeviceItemChangeValue(ZNodeValue item)
+        {
             Log.d(TAG,"Device item Switch Clicked!");
-            mPresenter.changeValue(item,mZNodeValueKey,instance);
+            mPresenter.changeValue(item);
         }
 
     };
@@ -94,6 +100,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
         RecyclerView.ItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(getContext().getDrawable(R.drawable.line_divider));
         mDevicesRecyclerView.addItemDecoration(dividerItemDecoration);
+        mDevicesRecyclerView.setAdapter(mDeviceListRecyclerViewAdapter);
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -120,20 +127,21 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
     }
 
     @Override
-    public void showDevicesList(List<ZNode> zNodes) {
+    public void showDevicesList(List<DeviceListItem> deviceListItems) {
         View v=rootView.findViewById(R.id.devicesListRecyclerView);
         if (v!=null){
-            mDevicesListAdapter = new DevicesListAdapter(zNodes, mDevicesItemListener);
+            final List<DeviceListItem> items = new ArrayList<>();
+            items.addAll(deviceListItems);
+
             getActivity().runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
 
-                    mDevicesRecyclerView.setAdapter(mDevicesListAdapter);
+                    mDeviceListRecyclerViewAdapter.updateDeviceListItems(items);
                     Log.d(TAG,"showing devices list");
                 }
             });
-
         }
     }
 

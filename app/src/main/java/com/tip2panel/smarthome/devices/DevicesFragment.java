@@ -18,13 +18,16 @@ import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.BaseFragment;
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.devices.editMode.DevicesEditModeActivity;
 import com.tip2panel.smarthome.devices.editMode.DevicesEditModeFragment;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +42,7 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
     private final static String TAG = DevicesFragment.class.getSimpleName();
     private final static String LOCATION = "location";
     private DevicesViewsContract.ParentView mParentView;
-    private DevicesListAdapter mDeviceListAdapter;
+    private DeviceListRecyclerViewAdapter mDeviceListRecyclerViewAdapter;
     private RecyclerView mDevicesRecyclerview;
     private View rootView;
     private String mLocation=" ";
@@ -58,7 +61,8 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocation=getArguments().getString(LOCATION);
-
+        mDeviceListRecyclerViewAdapter = new DeviceListRecyclerViewAdapter(new ArrayList<DeviceListItem>(),
+                mDeviceListItemListener,false);
 
     }
 
@@ -70,6 +74,7 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
         RecyclerView.ItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(getContext().getDrawable(R.drawable.line_divider));
         //set dividers for items
+        mDevicesRecyclerview.setAdapter(mDeviceListRecyclerViewAdapter);
         mDevicesRecyclerview.addItemDecoration(dividerItemDecoration);
         setHasOptionsMenu(true);
         return rootView;
@@ -164,16 +169,17 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
     }
 
     @Override
-    public void showDevicesList(List<ZNode> zNodes) {
+    public void showDevicesList(List<DeviceListItem> deviceListItems) {
         View v=rootView.findViewById(R.id.devicesListRecyclerView);
         if (v!=null){
-            mDeviceListAdapter = new DevicesListAdapter(zNodes, mDevicesItemListener);
+            final List<DeviceListItem> items = new ArrayList<>();
+            items.addAll(deviceListItems);
             getActivity().runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
 
-                    mDevicesRecyclerview.setAdapter(mDeviceListAdapter);
+                    mDeviceListRecyclerViewAdapter.updateDeviceListItems(items);
                     Log.d(TAG,"showing devices list");
                 }
             });
@@ -181,27 +187,27 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
         }
     }
 
-
-    DevicesListAdapter.DeviceListListener mDevicesItemListener = new DevicesListAdapter.DeviceListListener() {
+    DeviceListRecyclerViewAdapter.DeviceListItemListener mDeviceListItemListener = new DeviceListRecyclerViewAdapter.DeviceListItemListener() {
         @Override
-        public void onDeviceListCheckBoxChecked(int nodeId) {
+        public void onDeviceListCheckBoxChecked(String nodeId) {
 
         }
 
         @Override
-        public void onDeviceListCheckBoxUnchecked(int nodeId) {
+        public void onDeviceListCheckBoxUnchecked(String nodeId) {
 
         }
 
         @Override
-        public void onDeviceListItemClick(ZNode item) {
+        public void onDeviceListItemClick(DeviceListItem item) {
             Log.d(TAG,"Device item Clicked!");
         }
 
         @Override
-        public void onDeviceItemChangeValue(ZNode item, String mZNodeValueKey, int instance) {
+        public void onDeviceItemChangeValue(ZNodeValue item)
+        {
             Log.d(TAG,"Device item Switch Clicked!");
-            mParentView.changeValue(item,mZNodeValueKey,instance);
+            mParentView.changeValue(item);
         }
 
     };

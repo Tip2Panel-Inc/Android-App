@@ -5,8 +5,10 @@ import android.util.Log;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.data.source.GatewayDataSource;
 import com.tip2panel.smarthome.data.source.SmartHomeRepository;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 
 
@@ -39,16 +41,16 @@ public class DevicesPagerPresenter implements DevicesPagerContract.MvpPresenter 
     }
 
     @Override
-    public void changeValue(ZNode node, String zNodeValueKey, int instance) {
-        mSmartHomeRepository.changeValue(node,zNodeValueKey,instance);
+    public void changeValue(ZNodeValue zNodeValue) {
+        mSmartHomeRepository.changeValue(zNodeValue);
     }
 
     @Override
     public void loadDevices(final String location) {
         mSmartHomeRepository.getDevices(location, new GatewayDataSource.LoadDevicesCallback() {
             @Override
-            public void onDevicesLoaded(List<ZNode> zNodes) {
-                mDevicesPagerView.showDevicesList(zNodes,location);
+            public void onDevicesLoaded(List<DeviceListItem> deviceListItems) {
+                mDevicesPagerView.showDevicesList(deviceListItems,location);
             }
 
             @Override

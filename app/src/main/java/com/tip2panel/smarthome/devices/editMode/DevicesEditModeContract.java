@@ -3,6 +3,7 @@ package com.tip2panel.smarthome.devices.editMode;
 import com.engkan2kit.ava88.ZNode;
 import com.tip2panel.smarthome.BasePresenter;
 import com.tip2panel.smarthome.BaseView;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface DevicesEditModeContract {
     interface MvpView extends BaseView<MvpPresenter> {
-        void showDevicesList(List<ZNode> zNodes);
+        void showDevicesList(List<DeviceListItem> deviceListItems);
         void endEditing();
         void jumpToDeviceActivity();
         void showChangeLocationSelector(List<String> locations,String location);

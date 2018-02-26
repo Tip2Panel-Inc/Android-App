@@ -5,9 +5,11 @@ import android.util.Log;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.data.source.GatewayDataSource;
 import com.tip2panel.smarthome.data.source.SmartHomeRepository;
 import com.tip2panel.smarthome.devices.DevicesPagerContract;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 
 import java.util.List;
 
@@ -43,11 +45,16 @@ public class DashboardPresenter implements DashboardContract.MvpPresenter {
     }
 
     @Override
+    public void changeValue(ZNodeValue nodeValue) {
+        mSmartHomeRepository.changeValue(nodeValue);
+    }
+
+    @Override
     public void loadDevices() {
         mSmartHomeRepository.getAllDevices( new GatewayDataSource.LoadDevicesCallback() {
             @Override
-            public void onDevicesLoaded(List<ZNode> zNodes) {
-                mDevicesPagerView.showDevicesList(zNodes);
+            public void onDevicesLoaded(List<DeviceListItem> deviceListItems) {
+                mDevicesPagerView.showDevicesList(deviceListItems);
             }
 
             @Override

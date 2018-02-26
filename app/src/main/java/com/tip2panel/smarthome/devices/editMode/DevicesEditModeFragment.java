@@ -21,13 +21,16 @@ import android.widget.Toast;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.BaseFragment;
 import com.tip2panel.smarthome.R;
 import com.tip2panel.smarthome.dashboard.DashboardActivity;
 import com.tip2panel.smarthome.dashboard.DashboardContract;
+import com.tip2panel.smarthome.devices.DeviceListRecyclerViewAdapter;
 import com.tip2panel.smarthome.devices.DevicesActivity;
 import com.tip2panel.smarthome.devices.DevicesListAdapter;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 import com.tip2panel.smarthome.utils.DividerItemDecoration;
 
@@ -44,7 +47,7 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
     public static final String ARGUMENT_EDIT_MODE = "location";
     private final static String TAG = DevicesEditModeFragment.class.getSimpleName();
     private DevicesEditModeContract.MvpPresenter mPresenter;
-    private DevicesListAdapter mDevicesListAdapter;
+    private DeviceListRecyclerViewAdapter mDeviceListRecyclerViewAdapter;
     private RecyclerView mDevicesRecyclerView;
     private boolean pause =false;
     Handler handler = new Handler();
@@ -65,31 +68,34 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         mLocation=(String) getArguments().get(ARGUMENT_EDIT_MODE);
-        mDevicesListAdapter = new DevicesListAdapter(new ArrayList<ZNode>(),
-                mDevicesItemListener);
+        mDeviceListRecyclerViewAdapter = new DeviceListRecyclerViewAdapter(new ArrayList<DeviceListItem>(),
+                mDeviceListItemListener,true);
     }
 
-    DevicesListAdapter.DeviceListListener mDevicesItemListener = new DevicesListAdapter.DeviceListListener() {
+    DeviceListRecyclerViewAdapter.DeviceListItemListener mDeviceListItemListener = new DeviceListRecyclerViewAdapter.DeviceListItemListener() {
+
         @Override
-        public void onDeviceListCheckBoxChecked(int nodeId) {
+        public void onDeviceListCheckBoxChecked(String nodeId) {
             nodeIds.add(new Integer(nodeId));
             Log.d(TAG,"add to nodes to be modified " + new Integer(nodeId));
         }
 
         @Override
-        public void onDeviceListCheckBoxUnchecked(int nodeId) {
+        public void onDeviceListCheckBoxUnchecked(String nodeId) {
             nodeIds.remove(new Integer(nodeId));
             Log.d(TAG,"removed to nodes to be modified " + new Integer(nodeId));
         }
 
         @Override
-        public void onDeviceListItemClick(ZNode item) {
+        public void onDeviceListItemClick(DeviceListItem item) {
             Log.d(TAG,"Device item Clicked!");
         }
 
         @Override
-        public void onDeviceItemChangeValue(ZNode item, String mZNodeValueKey, int instance) {
-
+        public void onDeviceItemChangeValue(ZNodeValue item)
+        {
+            Log.d(TAG,"Device item Switch Clicked!");
+            //mPresenter.changeValue(item);
         }
 
     };
@@ -105,6 +111,7 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
         RecyclerView.ItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(getContext().getDrawable(R.drawable.line_divider));
         mDevicesRecyclerView.addItemDecoration(dividerItemDecoration);
+        mDevicesRecyclerView.setAdapter(mDeviceListRecyclerViewAdapter);
         Button changeNodesLocationButton = (Button) rootView.findViewById(R.id.moveDeviceButton);
         changeNodesLocationButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -152,16 +159,17 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
     }
 
     @Override
-    public void showDevicesList(List<ZNode> zNodes) {
+    public void showDevicesList(List<DeviceListItem> deviceListItems) {
         View v=rootView.findViewById(R.id.devicesListRecyclerView);
         if (v!=null){
-            mDevicesListAdapter = new DevicesListAdapter(zNodes, mDevicesItemListener,true);
+            final List<DeviceListItem> items = new ArrayList<>();
+            items.addAll(deviceListItems);
             getActivity().runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
 
-                    mDevicesRecyclerView.setAdapter(mDevicesListAdapter);
+                    mDeviceListRecyclerViewAdapter.updateDeviceListItems(items);
                     Log.d(TAG,"showing devices list");
                 }
             });

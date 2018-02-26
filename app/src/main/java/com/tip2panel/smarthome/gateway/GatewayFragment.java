@@ -185,6 +185,7 @@ public class GatewayFragment extends Fragment implements GatewayContract.MvpView
 
     @Override
     public void showGatewayLoginDialog(final AVA88GatewayInfo ava88GatewayInfo) {
+        //TODO: check if gateway is already owned. If yes, no need to login. Add also touch and hold to edit gateway info.
         DialogUtilities.showGatewayLoginDialog(getActivity(), null,
                 new DialogUtilities.GatewayLoginDialogCallback() {
             @Override

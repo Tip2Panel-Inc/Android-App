@@ -8,6 +8,7 @@ import com.engkan2kit.ava88.ZNode;
 import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.BasePresenter;
 import com.tip2panel.smarthome.BaseView;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 
 import java.util.List;
 
@@ -19,13 +20,13 @@ public interface DevicesViewsContract {
     interface ChildView{
         void onAttachToParentView(Fragment fragment);
         void showDeviceDetails(ZNode zNode);
-        void showDevicesList(List<ZNode> zNodes);
+        void showDevicesList(List<DeviceListItem> deviceListItems);
     }
 
     interface ParentView{
         void loadDevicesList(String location);
         void loadDeviceDetails(String id);
-        void changeValue(ZNode zNode, String zNodeValue, int instance);
+        void changeValue(ZNodeValue nodeValue);
         void changeDeviceName(ZNode zNode,String name);
         void changeDeviceLocation(ZNode zNode,String location);
         void setChildView(String location, ChildView childView);

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 
 import java.util.List;
 
@@ -44,6 +45,11 @@ public class SmartHomeRepository implements GatewayDataSource {
     @Override
     public void changeValue(ZNode node, String zNodeValueKey, int instance) {
         mGatewayLocalDataSource.changeValue(node,zNodeValueKey,instance);
+    }
+
+    @Override
+    public void changeValue(ZNodeValue nodeValue) {
+        mGatewayLocalDataSource.changeValue(nodeValue);
     }
 
     @Override

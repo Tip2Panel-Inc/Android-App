@@ -13,11 +13,15 @@ import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.AVA88GatewayScanner;
 import com.engkan2kit.ava88.NodeLocation;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
 import com.tip2panel.smarthome.data.source.GatewayDataSource;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 import com.tip2panel.smarthome.utils.NetworkUtilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -72,7 +76,47 @@ public class GatewayLocalDataSource implements GatewayDataSource {
             }
 
             @Override
-            public void onInclusionExlusionProcessEnded(int status, @Nullable ZNode node) {
+            public void onValueChangeResponseListener(int nodeId, Boolean isSuccessfull) {
+
+            }
+
+                    @Override
+            public void onInclusionExclusionProcessEnded(int status, @Nullable ZNode node) {
+
+            }
+        });
+    }
+
+    @Override
+    public void changeValue(ZNodeValue nodeValue) {
+        mAva88Gateway.changeValue(nodeValue, new AVA88Gateway.AVA88GatewayListener() {
+            @Override
+            public void onGetLocationsResponse(List<NodeLocation> locations) {
+
+            }
+
+            @Override
+            public void onScanNodesDone(List<ZNode> nodes) {
+
+            }
+
+            @Override
+            public void onValueChangeResponseListener(ZNode mZNode, Boolean isSuccessfull) {
+
+            }
+
+            @Override
+            public void onValueChangeResponseListener(int nodeId, Boolean isSuccessfull) {
+                if(isSuccessfull){
+                    Log.d("VALUE","Change successful");
+                }
+                else{
+                    Log.d("VALUE","Change unsuccessful");
+                }
+            }
+
+            @Override
+            public void onInclusionExclusionProcessEnded(int status, @Nullable ZNode node) {
 
             }
         });
@@ -286,8 +330,9 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                 location = " ";
             mAva88Gateway.fetchNodes(location, new AVA88Gateway.OnFetchNodesListener() {
                 @Override
-                public void onFetchNodesDone(final List<ZNode> nodes) {
-                    callback.onDevicesLoaded(nodes);
+                public void onFetchNodesDone(final List<ZNode> nodes)
+                {
+                    callback.onDevicesLoaded(zNodesValuesToDeviceListItems(nodes));
                 }
             });
         }
@@ -299,12 +344,71 @@ public class GatewayLocalDataSource implements GatewayDataSource {
             mAva88Gateway.fetchNodes(new AVA88Gateway.OnFetchNodesListener() {
                 @Override
                 public void onFetchNodesDone(final List<ZNode> nodes) {
-                    callback.onDevicesLoaded(nodes);
+                    callback.onDevicesLoaded(zNodesValuesToDeviceListItems(nodes));
                 }
             });
         }
     }
 
+    private List<DeviceListItem> zNodesValuesToDeviceListItems(List<ZNode> zNodes)
+    {
+        final ArrayList<DeviceListItem> deviceListItems = new ArrayList<>();
+        for (ZNode znode : zNodes)
+        {
+            DeviceListItem deviceListItem = new DeviceListItem();
+            ZNodeValue zNodeValue = new ZNodeValue();
+            zNodeValue.setNodeId(znode.nodeID);
+            String name = znode.nodeName;
+            if (name == null || name.length() == 0)
+                if (znode.nodeProductStr.length() > 15)
+                    name = znode.nodeProductStr.substring(0, 14);
+                else
+                    name = znode.nodeProductStr;
+            zNodeValue.setValueLabel(name);
+            zNodeValue.setValue(znode.nodeStatusString);
+            deviceListItem.setId(Integer.toString(znode.nodeID));
+            deviceListItem.setType(0);
+            deviceListItem.setZNodeValue(zNodeValue);
+            deviceListItems.add(deviceListItem);
+            Map<String, ZNodeValue> zNodeValuesMap = new HashMap<String, ZNodeValue>();
+            zNodeValuesMap.putAll(znode.getNodeValues());
+            for (Map.Entry<String, ZNodeValue> entry : zNodeValuesMap.entrySet()) {
+                deviceListItem = new DeviceListItem();
+                deviceListItem.setId(znode.nodeID + entry.getKey());
+                int valueClassId=entry.getValue().getValueClassId();
+                int valueIndex=entry.getValue().getValueIndex();
+                if (valueClassId==0x30){ //Allow binary sensor to handle multiple indexes
+                    deviceListItem.setType(((valueClassId & 0xFF) << 8)| 0x0000);
+                }
+                else {
+                    deviceListItem.setType(((valueClassId & 0xFF) << 8) | entry.getValue().getValueIndex() & 0x00FF);
+                }
+                deviceListItem.setZNodeValue(entry.getValue());
+                Log.d(TAG, "device type: " + deviceListItem.getType() + " deviceID: " + deviceListItem.getId());
+                switch (deviceListItem.getType()) {
+                    case 0:
+                        deviceListItems.add(deviceListItem);
+                        break;
+                    case 0x2500:
+                        deviceListItems.add(deviceListItem);
+                        break;
+                    case 0x3000:
+                        if ((valueIndex>0 && valueIndex <=13) || valueIndex ==240)
+                        {
+                            deviceListItems.add(deviceListItem);
+                        }
+                        break;
+                    case 0x3361:
+                        deviceListItems.add(deviceListItem);
+                        break;
+                    case 0x7107:
+                        deviceListItems.add(deviceListItem);
+                        break;
+                }
+            }
+        }
+        return deviceListItems;
+    }
     @Override
     public void getLocations(final LocationsCallback callback) {
         if(mAva88Gateway!=null && mAva88Gateway.isConnected()) {

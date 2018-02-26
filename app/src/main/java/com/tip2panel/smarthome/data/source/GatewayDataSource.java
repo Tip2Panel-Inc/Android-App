@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.engkan2kit.ava88.ZNode;
+import com.engkan2kit.ava88.ZNodeValue;
+import com.tip2panel.smarthome.utils.DeviceListItem;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ public interface GatewayDataSource {
     }
 
     interface LoadDevicesCallback{
-        void onDevicesLoaded(List<ZNode> zNodes);
+        void onDevicesLoaded(List<DeviceListItem> deviceListItems);
         void onDataNotAvailable();
     }
 
@@ -72,6 +74,7 @@ public interface GatewayDataSource {
     }
 
     void changeValue(ZNode node, String zNodeValueKey, int instance);
+    void changeValue(ZNodeValue nodeValue);
 
     void connectGateway(AVA88GatewayInfo ava88GatewayInfo,
                         @NonNull GatewayConnectionCallback callback);
