@@ -1068,6 +1068,7 @@ public class AVA88Gateway{
                                     String nodeValueGenre = value.getAttribute("genre");
                                     String nodeValueType = value.getAttribute("type");
                                     String nodeValueLable= value.getAttribute("label");
+                                    String nodeValueUnits= value.getAttribute("units");
                                     Log.d("NODES LIST", "Values: class=" + nodeValueClass + "instance " + value.getAttribute("instance"));
                                     int nodeValueInstance;
                                     int nodeValueIndex;
@@ -1093,6 +1094,7 @@ public class AVA88Gateway{
                                     //insert the value to the node with key = class+index
                                     myZNodeValue.setValueLabel(nodeValueLable);
                                     myZNodeValue.setNodeId(z.nodeID);
+                                    myZNodeValue.setValueUnits(nodeValueUnits);
                                     z.addZNodeValue(nodeValueClass + nodeValueIndex, myZNodeValue);
                                 }
 

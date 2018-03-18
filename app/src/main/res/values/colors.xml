@@ -31,4 +31,6 @@
     <color name="colorProductHeaderBackground">#606278</color>
     <color name="colorProductHeaderText">#ffffff</color>
 
+    <color name="colorSensorCheckedBackground">#ffe119</color>
+    <color name="colorSensorUnCheckedBackground">#606278</color>
 </resources>

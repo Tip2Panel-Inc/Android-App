@@ -16,7 +16,7 @@ public final class ZNodeValueClass {
     public static final int SENSOR_BINARY       =0x30;
     public static final String strSENSOR_BINARY         ="SENSOR BINARY";
     public static final int SENSOR_MULTILEVEL   =0x31;
-    public static final String strSENSOR_MULTILEVEL     ="SENSOR_ MULTILEVEL";
+    public static final String strSENSOR_MULTILEVEL     ="SENSOR MULTILEVEL";
     public static final int COLOR_CONTROL       =0x33;
     public static final String strCOLOR_CONTROL         ="COLOR CONTROL";
     public static final int ALARM               =0x71;

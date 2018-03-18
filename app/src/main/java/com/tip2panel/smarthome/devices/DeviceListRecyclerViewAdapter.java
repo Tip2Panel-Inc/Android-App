@@ -71,6 +71,10 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 ViewGroup sensorBinaryViewGroup = (ViewGroup) mInflater.inflate(R.layout.devices_item_value_binary_sensor,parent,false);
                 SensorBinaryViewHolder sensorBinaryViewHolder = new SensorBinaryViewHolder(sensorBinaryViewGroup);
                 return sensorBinaryViewHolder;
+            case 0x3100:
+                ViewGroup sensorMultilevelViewGroup = (ViewGroup) mInflater.inflate(R.layout.devices_item_value_multilevel_sensor,parent,false);
+                SensorMultilevelViewHolder sensorMultilevelViewHolder = new SensorMultilevelViewHolder(sensorMultilevelViewGroup);
+                return sensorMultilevelViewHolder;
             case 0x3361:
                 ViewGroup colorControlViewGroup = (ViewGroup) mInflater.inflate (R.layout.devices_item_value_color_control,parent,false);
                 ColorControlViewHolder colorControlViewHolder = new ColorControlViewHolder(colorControlViewGroup);
@@ -101,6 +105,9 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 break;
             case 0x3000:
                 ((SensorBinaryViewHolder) holder).bind(object,mListener);
+                break;
+            case 0x3100:
+                ((SensorMultilevelViewHolder) holder).bind(object,mListener);
                 break;
             case 0x3361:
                 ((ColorControlViewHolder) holder).bind(object,mListener);
@@ -361,7 +368,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         public SensorBinaryViewHolder(View itemView) {
             super(itemView);
             mSensorLabelTextView = (TextView) itemView.findViewById(R.id.valueNameTextView);
-            mSensorValueTextView = (TextView) itemView.findViewById(R.id.binarySensorTextView);
+            mSensorValueTextView = (TextView) itemView.findViewById(R.id.sensorBinaryTextView);
             mSensorStatusImageView=(ImageView) itemView.findViewById(R.id.sensorBinaryStatusImageView);
             mContext = itemView.getContext();
 
@@ -383,15 +390,57 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 if(sensorValue.equalsIgnoreCase("true"))
                 {
                     mSensorValueTextView.setText(mContext.getString(R.string.strTrue));
-                    mSensorStatusImageView.setImageResource(R.drawable.ic_warning_red);
+                    mSensorStatusImageView.setImageResource(R.drawable.ic_radio_button_checked);
+                    mSensorStatusImageView.setColorFilter(R.color.colorSensorCheckedBackground);
                 }
                 else
                 {
                     mSensorValueTextView.setText(mContext.getString(R.string.strFalse));
-                    mSensorStatusImageView.setImageResource(R.drawable.ic_mood);
+                    mSensorStatusImageView.setImageResource(R.drawable.ic_radio_button_unchecked);
+                    mSensorStatusImageView.setColorFilter(R.color.colorSensorUnCheckedBackground);
                 }
 
 
+
+
+            }
+        }
+    }
+
+    //ViewHolder for Multilevel Sensor
+    public static class SensorMultilevelViewHolder extends RecyclerView.ViewHolder {
+        private TextView mSensorLabelTextView;
+        private TextView mSensorValueTextView;
+        private ImageView mSensorStatusImageView;
+        private ImageView mValueImageView;
+        private Context mContext;
+
+
+
+        public SensorMultilevelViewHolder(View itemView) {
+            super(itemView);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
+            mSensorLabelTextView = (TextView) itemView.findViewById(R.id.valueNameTextView);
+            mSensorValueTextView = (TextView) itemView.findViewById(R.id.sensorMultilevelTextView);
+            mSensorStatusImageView=(ImageView) itemView.findViewById(R.id.sensorMultilevelStatusImageView);
+            mContext = itemView.getContext();
+
+        }
+
+        public void bind(final DeviceListItem item,final DeviceListItemListener listener){
+            if (item != null) {
+                String name = item.getZNodeValue().getValueLabel()+"";
+                mSensorLabelTextView.setText(name);
+                Log.d(TAG,"Sensor Binary Label "+name);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v){
+                        listener.onDeviceListItemClick(item);
+                    }
+                });
+
+                String sensorValue=item.getZNodeValue().getValue();
+
+                mSensorValueTextView.setText(sensorValue + " " + item.getZNodeValue().getValueUnits());
 
 
             }

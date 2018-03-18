@@ -375,9 +375,15 @@ public class GatewayLocalDataSource implements GatewayDataSource {
             for (Map.Entry<String, ZNodeValue> entry : zNodeValuesMap.entrySet()) {
                 deviceListItem = new DeviceListItem();
                 deviceListItem.setId(znode.nodeID + entry.getKey());
+                deviceListItem.setType(-1);
                 int valueClassId=entry.getValue().getValueClassId();
                 int valueIndex=entry.getValue().getValueIndex();
-                if (valueClassId==0x30){ //Allow binary sensor to handle multiple indexes
+                //Allow binary sensor to handle multiple indexes except icon
+                if (valueClassId==0x30){
+                    if (entry.getValue().getValueIndex()!=250)
+                        deviceListItem.setType(((valueClassId & 0xFF) << 8)| 0x0000);
+                }
+                else if( valueClassId==0x31){
                     deviceListItem.setType(((valueClassId & 0xFF) << 8)| 0x0000);
                 }
                 else {
@@ -389,19 +395,25 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                     case 0:
                         deviceListItems.add(deviceListItem);
                         break;
-                    case 0x2500:
+                    case 0x2500: //switch binary index 0
                         deviceListItems.add(deviceListItem);
                         break;
-                    case 0x3000:
+                    case 0x3000: //binary sensors
                         if ((valueIndex>0 && valueIndex <=13) || valueIndex ==240)
                         {
                             deviceListItems.add(deviceListItem);
                         }
                         break;
-                    case 0x3361:
+                    case 0x3100: //multilevel sensors
+                        if ((valueIndex>0 && valueIndex <=51))
+                        {
+                            deviceListItems.add(deviceListItem);
+                        }
+                        break;
+                    case 0x3361: //color control RGBW index 97
                         deviceListItems.add(deviceListItem);
                         break;
-                    case 0x7107:
+                    case 0x7107: //Alarm home security index 07
                         deviceListItems.add(deviceListItem);
                         break;
                 }
