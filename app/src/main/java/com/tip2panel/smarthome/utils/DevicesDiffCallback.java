@@ -48,6 +48,12 @@ public class DevicesDiffCallback extends DiffUtil.Callback {
         ZNodeValue oldZNodeValue = mOldItems.get(oldItemPosition).getZNodeValue();
         ZNodeValue newZNodeValue = mNewItems.get(newItemPosition).getZNodeValue();
         Log.d("DIFF", "Items the same "+oldZNodeValue.getNodeId()+ " "+newZNodeValue.getNodeId());
+        //Labels are not the same
+        if (!oldZNodeValue.getValueLabel().equals(newZNodeValue.getValueLabel()))
+        {
+            falseCounter++;
+            Log.d("DIFF","Items not the same label "+oldZNodeValue.getValueLabel()+ " and "+newZNodeValue.getValueLabel());
+        }
         //values not the same
         if (!oldZNodeValue.getValue().equals(newZNodeValue.getValue()))
         {

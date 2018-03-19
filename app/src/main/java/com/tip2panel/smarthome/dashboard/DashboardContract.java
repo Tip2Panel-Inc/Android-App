@@ -24,6 +24,7 @@ public interface DashboardContract {
     interface MvpPresenter extends BasePresenter {
         void changeValue(ZNode node, String zNodeValueKey, int instance);
         void changeValue(ZNodeValue nodeValue);
+        void changeDeviceName(final String deviceId, final String name);
         void loadDevices();
     }
 }

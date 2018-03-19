@@ -98,6 +98,11 @@ public class DevicesEditModeFragment extends Fragment implements DevicesEditMode
             //mPresenter.changeValue(item);
         }
 
+        @Override
+        public void onDeviceProductLongClick(String deviceId,String currentName) {
+
+        }
+
     };
 
     @Override

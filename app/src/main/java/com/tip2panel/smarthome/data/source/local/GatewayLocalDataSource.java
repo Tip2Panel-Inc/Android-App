@@ -123,6 +123,21 @@ public class GatewayLocalDataSource implements GatewayDataSource {
     }
 
     @Override
+    public void changeDeviceName(String deviceId, String name) {
+        mAva88Gateway.changeNodeName(deviceId, name, new AVA88Gateway.ChangeDeviceNameCallBack() {
+            @Override
+            public void onChangeNameDone(String deviceId, String name, boolean state) {
+                if(state){
+                    Log.d("DEVICE NAME","Change successful");
+                }
+                else{
+                    Log.d("DEVICE NAME","Change unsuccessful");
+                }
+            }
+        });
+    }
+
+    @Override
     public void connectGateway(final AVA88GatewayInfo ava88GatewayInfo,
                                @NonNull final GatewayConnectionCallback callback) {
             mAva88Gateway = new AVA88Gateway(ava88GatewayInfo);

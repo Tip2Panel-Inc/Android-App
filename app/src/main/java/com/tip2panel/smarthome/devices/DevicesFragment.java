@@ -1,6 +1,7 @@
 package com.tip2panel.smarthome.devices;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -187,6 +188,11 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
         }
     }
 
+    @Override
+    public void showDeviceChangeNameDialog(final String deviceId) {
+
+    }
+
     DeviceListRecyclerViewAdapter.DeviceListItemListener mDeviceListItemListener = new DeviceListRecyclerViewAdapter.DeviceListItemListener() {
         @Override
         public void onDeviceListCheckBoxChecked(String nodeId) {
@@ -208,6 +214,16 @@ public class DevicesFragment extends Fragment implements DevicesViewsContract.Ch
         {
             Log.d(TAG,"Device item Switch Clicked!");
             mParentView.changeValue(item);
+        }
+
+        @Override
+        public void onDeviceProductLongClick(final String deviceId, final String currentName) {
+            DialogUtilities.showChangeDeviceNameDialog(getActivity(),deviceId, currentName, new DialogUtilities.ChangeDeviceNameDialogCallback() {
+                @Override
+                public void onChangeName(String deviceName) {
+                    mParentView.changeDeviceName(deviceId,deviceName);
+                }
+            });
         }
 
     };

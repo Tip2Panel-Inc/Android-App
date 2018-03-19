@@ -622,8 +622,25 @@ public class AVA88Gateway{
 
     }
 
-    public void changeNodeName(ZNode mZNode, String newName){
+    public interface ChangeDeviceNameCallBack{
+        void onChangeNameDone(final String deviceId,final String name,boolean state);
+    }
+    public void changeNodeName(final String deviceId, final String newName, final ChangeDeviceNameCallBack callback){
+        String body = "fun=nam&node=node"+deviceId+"&value="+newName.trim();
+        //TODO: Add code for sending and receiving request.
+        String uri = AVA88Gateway.command.get(COMMAND_SET_NODE_NAME);
+        Callback mCallback = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onChangeNameDone(deviceId,newName,false);
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                callback.onChangeNameDone(deviceId,newName,true);
+            }
+        };
+        sendCommand(uri,body,mCallback);
     }
 
     public void changeValue(ZNodeValue zNodeValue,final AVA88GatewayListener callback)

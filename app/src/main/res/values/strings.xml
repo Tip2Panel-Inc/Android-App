@@ -112,6 +112,9 @@
     <string name="msg_new_location">Add New Device Location?</string>
     <string name="msg_location_examples">Example: Bedroom, Kitchen</string>
 
+    <string name="msg_device_name">Device Name</string>
+    <string name="msg_device_name_description">Rename your device.</string>
+
     <string name="msg_new_location_error">Location Name Conflict!</string>
     <string name="msg_location_exists">Location already exists!</string>
     <string name="location_name">Location Name</string>

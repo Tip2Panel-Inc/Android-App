@@ -50,6 +50,11 @@ public class DashboardPresenter implements DashboardContract.MvpPresenter {
     }
 
     @Override
+    public void changeDeviceName(String deviceId, String name) {
+        mSmartHomeRepository.changeDeviceName(deviceId,name);
+    }
+
+    @Override
     public void loadDevices() {
         mSmartHomeRepository.getAllDevices( new GatewayDataSource.LoadDevicesCallback() {
             @Override

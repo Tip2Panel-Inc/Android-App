@@ -46,6 +46,11 @@ public class DevicesPagerPresenter implements DevicesPagerContract.MvpPresenter 
     }
 
     @Override
+    public void changeDeviceName(String deviceId, String name) {
+        mSmartHomeRepository.changeDeviceName(deviceId,name);
+    }
+
+    @Override
     public void loadDevices(final String location) {
         mSmartHomeRepository.getDevices(location, new GatewayDataSource.LoadDevicesCallback() {
             @Override

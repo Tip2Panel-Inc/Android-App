@@ -89,6 +89,16 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
             mPresenter.changeValue(item);
         }
 
+        @Override
+        public void onDeviceProductLongClick(final String deviceId, final String currentName) {
+            DialogUtilities.showChangeDeviceNameDialog(getActivity(),deviceId, currentName,new DialogUtilities.ChangeDeviceNameDialogCallback() {
+                @Override
+                public void onChangeName(String deviceName) {
+                    mPresenter.changeDeviceName(deviceId,deviceName);
+                }
+            });
+        }
+
     };
 
     @Override

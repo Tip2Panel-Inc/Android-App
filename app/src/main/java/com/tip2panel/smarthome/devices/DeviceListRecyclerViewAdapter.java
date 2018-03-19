@@ -1,6 +1,5 @@
 package com.tip2panel.smarthome.devices;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +43,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         void onDeviceListCheckBoxUnchecked(String deviceId);
         void onDeviceListItemClick(DeviceListItem item);
         void onDeviceItemChangeValue(ZNodeValue item);
+        void onDeviceProductLongClick(String deviceId,String currentName);
 
     }
 
@@ -206,11 +206,18 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
         public void bind(final DeviceListItem item,final DeviceListItemListener listener){
             if (item != null) {
-                String name = item.getZNodeValue().getValueLabel()+"";
+                final String name = item.getZNodeValue().getValueLabel()+"";
                 mProductNameTextView.setText(name);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v){
                         listener.onDeviceListItemClick(item);
+                    }
+                });
+                itemView.setOnLongClickListener(new View.OnLongClickListener(){
+                    @Override
+                    public boolean onLongClick(View v) {
+                        listener.onDeviceProductLongClick(item.getId(),name);
+                        return true;
                     }
                 });
                 String status = item.getZNodeValue().getValue()+"";

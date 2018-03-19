@@ -76,6 +76,8 @@ public interface GatewayDataSource {
     void changeValue(ZNode node, String zNodeValueKey, int instance);
     void changeValue(ZNodeValue nodeValue);
 
+    void changeDeviceName(String deviceId, String name);
+
     void connectGateway(AVA88GatewayInfo ava88GatewayInfo,
                         @NonNull GatewayConnectionCallback callback);
 

@@ -53,6 +53,11 @@ public class SmartHomeRepository implements GatewayDataSource {
     }
 
     @Override
+    public void changeDeviceName(String deviceId, String name) {
+        mGatewayLocalDataSource.changeDeviceName(deviceId,name);
+    }
+
+    @Override
     public void connectGateway(AVA88GatewayInfo ava88GatewayInfo, @NonNull GatewayConnectionCallback callback) {
         mGatewayLocalDataSource.connectGateway(ava88GatewayInfo,callback);
     }

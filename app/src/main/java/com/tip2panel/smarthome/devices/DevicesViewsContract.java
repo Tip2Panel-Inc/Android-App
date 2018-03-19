@@ -21,13 +21,14 @@ public interface DevicesViewsContract {
         void onAttachToParentView(Fragment fragment);
         void showDeviceDetails(ZNode zNode);
         void showDevicesList(List<DeviceListItem> deviceListItems);
+        void showDeviceChangeNameDialog(String deviceId);
     }
 
     interface ParentView{
         void loadDevicesList(String location);
         void loadDeviceDetails(String id);
         void changeValue(ZNodeValue nodeValue);
-        void changeDeviceName(ZNode zNode,String name);
+        void changeDeviceName(String id,String name);
         void changeDeviceLocation(ZNode zNode,String location);
         void setChildView(String location, ChildView childView);
         void addLocation(String location);

@@ -220,8 +220,8 @@ public class DevicesPagerFragment extends Fragment implements DevicesPagerContra
     }
 
     @Override
-    public void changeDeviceName(ZNode zNode, String name) {
-
+    public void changeDeviceName(String deviceId, String name) {
+        mPresenter.changeDeviceName(deviceId,name);
     }
 
     @Override

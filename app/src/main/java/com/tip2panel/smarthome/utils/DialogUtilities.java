@@ -136,6 +136,10 @@ public class DialogUtilities {
         void onDeleteLocation(String location);
     }
 
+    public interface ChangeDeviceNameDialogCallback{
+        void onChangeName(String deviceName);
+    }
+
     public interface GatewayLoginDialogCallback{
         void onLogin(String user, String password);
         void onInvalidCredentials(AVA88GatewayInfo ava88GatewayInfo);
@@ -187,7 +191,7 @@ public class DialogUtilities {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setTitle(R.string.msg_new_location)
                 .setView(view)
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton(R.string.dialog_continue,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -200,7 +204,7 @@ public class DialogUtilities {
     }
 
     /**
-     * The helper method to show gateway error alert dialog.
+     * The helper method to show add location alert dialog.
      */
     public static void showAddLocationDialog(final Activity activity, final LocationDialogCallback callback) {
         DialogUtilities.getAddLocationDialog(activity,callback).show();
@@ -208,7 +212,7 @@ public class DialogUtilities {
 
 
     /**
-     * The dialog that prompt to connect Internet, with listener.
+     * The dialog that prompt to conflict of location name, with listener.
      */
     public static AlertDialog getLocationsConflictDialog(final Activity activity,String location) {
 
@@ -232,7 +236,7 @@ public class DialogUtilities {
 
 
     /**
-     * The helper method to show gateway error alert dialog.
+     * The helper method to show Location Name Conflict alert dialog.
      */
     public static void showLocationsConflictDialog(final Activity activity, String location) {
         DialogUtilities.getLocationsConflictDialog(activity,location).show();
@@ -240,7 +244,7 @@ public class DialogUtilities {
 
 
     /**
-     * The dialog that prompt to connect Internet, with listener.
+     * The dialog that prompt to remove location, with listener.
      */
     public static AlertDialog getRemoveLocationsDialog(final Activity activity, final String location,
                                                        final LocationDialogCallback callback) {
@@ -272,7 +276,7 @@ public class DialogUtilities {
 
 
     /**
-     * The helper method to show gateway error alert dialog.
+     * The helper method to show remove Location alert dialog.
      */
     public static void showRemoveLocationsDialog(final Activity activity, String location,
                                                  final LocationDialogCallback callback) {
@@ -284,7 +288,7 @@ public class DialogUtilities {
         void onChangeLocationOk(String location);
     }
     /**
-     * The dialog that prompt to connect Internet, with listener.
+     * The dialog that prompt to change location, with listener.
      */
     public static AlertDialog getChangeLocationsDialog(final Activity activity,
                                                        final List<String> locations,
@@ -343,7 +347,7 @@ public class DialogUtilities {
 
 
     /**
-     * The helper method to show gateway error alert dialog.
+     * The helper method to show change location alert dialog.
      */
     public static void showChangeLocationsDialog(final Activity activity,
                                                  List<String> locations,
@@ -353,6 +357,34 @@ public class DialogUtilities {
     }
 
 
+    /**
+     * The dialog for changing Device name.
+     */
+    public static AlertDialog getChangeDeviceNameDialog(final Activity activity,String deviceId, String currentName, final ChangeDeviceNameDialogCallback callback) {
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_change_device_name,null);
+        final EditText input = (EditText) view.findViewById(R.id.deviceNameEditText);
+        input.setText(currentName);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.msg_device_name)
+                .setView(view)
+                .setCancelable(true)
+                .setPositiveButton(R.string.dialog_continue,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                callback.onChangeName(input.getText().toString());
+                            }
+                        });
+        return dialogBuilder.create();
+    }
+
+    /**
+     * The helper method to show changing Device name alert dialog.
+     */
+    public static void showChangeDeviceNameDialog(final Activity activity,String deviceId,String currentName, final ChangeDeviceNameDialogCallback callback) {
+        DialogUtilities.getChangeDeviceNameDialog(activity,deviceId,currentName,callback).show();
+    }
 
 
     /**

@@ -25,6 +25,7 @@ public interface DevicesPagerContract {
 
     interface MvpPresenter extends BasePresenter {
         void changeValue(ZNodeValue nodeValue);
+        void changeDeviceName(String deviceId,String name);
         void loadDevices(final String Location);
         void loadPages();
         void addLocation(String location);
