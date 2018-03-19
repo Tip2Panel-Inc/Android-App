@@ -398,6 +398,9 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                     case 0x2500: //switch binary index 0
                         deviceListItems.add(deviceListItem);
                         break;
+                    case 0x2600: //switch multilevel index 0
+                        deviceListItems.add(deviceListItem);
+                        break;
                     case 0x3000: //binary sensors
                         if ((valueIndex>0 && valueIndex <=13) || valueIndex ==240)
                         {

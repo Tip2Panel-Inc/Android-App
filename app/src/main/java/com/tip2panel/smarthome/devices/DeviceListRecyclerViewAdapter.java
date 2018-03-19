@@ -1,5 +1,6 @@
 package com.tip2panel.smarthome.devices;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +69,10 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 ViewGroup switchBinaryViewGroup = (ViewGroup) mInflater.inflate ( R.layout.devices_item_value_switch_binary, parent, false );
                 SwitchBinaryViewHolder switchBinaryViewHolder = new SwitchBinaryViewHolder(switchBinaryViewGroup);
                 return switchBinaryViewHolder;
+            case 0x2600:
+                ViewGroup switchMultilevelViewGroup = (ViewGroup) mInflater.inflate ( R.layout.devices_item_value_switch_multilevel, parent, false );
+                SwitchMultilevelViewHolder switchMultilevelViewHolder = new SwitchMultilevelViewHolder(switchMultilevelViewGroup);
+                return switchMultilevelViewHolder;
             case 0x3000:
                 ViewGroup sensorBinaryViewGroup = (ViewGroup) mInflater.inflate(R.layout.devices_item_value_binary_sensor,parent,false);
                 SensorBinaryViewHolder sensorBinaryViewHolder = new SensorBinaryViewHolder(sensorBinaryViewGroup);
@@ -102,6 +108,9 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 break;
             case 0x2500:
                 ((SwitchBinaryViewHolder) holder).bind(object,mListener);
+                break;
+            case 0x2600:
+                ((SwitchMultilevelViewHolder) holder).bind(object,mListener);
                 break;
             case 0x3000:
                 ((SensorBinaryViewHolder) holder).bind(object,mListener);
@@ -278,6 +287,108 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     listener.onDeviceItemChangeValue(zNodeValue);
                     }
                 });
+            }
+        }
+    }
+
+    //ViewHolder for Switch Multilevel index 0
+    public static class SwitchMultilevelViewHolder extends RecyclerView.ViewHolder {
+        private FlexboxLayout mFlexboxLayout;
+        private TextView mSwitchMultilevelName;
+        private SeekBar mSwitchMultilevelSeekBar;
+        private Context mContext;
+
+
+        public SwitchMultilevelViewHolder(View itemView) {
+            super(itemView);
+            mSwitchMultilevelName = (TextView) itemView.findViewById(R.id.valueNameTextView);
+            mSwitchMultilevelSeekBar = (SeekBar) itemView.findViewById(R.id.switchMultilevelSeekBar);
+            mContext = itemView.getContext();
+
+        }
+
+        public void bind(final DeviceListItem item,final DeviceListItemListener listener){
+            if (item != null) {
+                String valueLabel = item.getZNodeValue().getValueLabel();
+                if (valueLabel==null || valueLabel.length() ==0)
+                {
+                    mSwitchMultilevelName.setText("Level");
+                }
+                else
+                {
+                    mSwitchMultilevelName.setText(valueLabel);
+                }
+
+                int switchValue=0;
+                try{
+                    String val = item.getZNodeValue().getValue(1);
+                    Log.d("LEVEL","Switch value in str: " + switchValue);
+                    switchValue = Integer.parseInt(val);
+                }
+                catch (NumberFormatException e){
+                    e.printStackTrace();
+                    switchValue=0;
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                    switchValue=0;
+                }
+
+                int switchValueMax=0;
+                try{
+                    String val = item.getZNodeValue().getValueMax();
+                    switchValueMax = Integer.parseInt(val);
+                }
+                catch (NumberFormatException e){
+                    e.printStackTrace();
+                    switchValueMax=0;
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                    switchValueMax=0;
+                }
+
+                int switchValueMin=0;
+                try{
+                    String val = item.getZNodeValue().getValueMin();
+                    switchValueMin = Integer.parseInt(val);
+                }
+                catch (NumberFormatException e){
+                    e.printStackTrace();
+                    switchValueMin=0;
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                    switchValueMin=0;
+                }
+
+                mSwitchMultilevelSeekBar.setMax(switchValueMax);
+                //mSwitchMultilevelSeekBar.setMin(switchValueMin);
+                mSwitchMultilevelSeekBar.setProgress(switchValue);
+                Log.d("LEVEL","Switch value in int: " + switchValue);
+                mSwitchMultilevelSeekBar.setOnSeekBarChangeListener(
+                        new SeekBar.OnSeekBarChangeListener(){
+
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                ZNodeValue zNodeValue= item.getZNodeValue();
+                                zNodeValue.setValue(String.valueOf(progress), 1);
+                                listener.onDeviceItemChangeValue(zNodeValue);
+
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        }
+                );
+                Log.d(TAG,"Switch Multilevel");
             }
         }
     }

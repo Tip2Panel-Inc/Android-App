@@ -21,6 +21,8 @@ public class ZNodeValue {
     private String valueUnits;
     private boolean valueReadOnly= false;
     private boolean valuePolled=false;
+    private String valueMax;
+    private String valueMin;
     private ArrayList<String> items=new ArrayList<>();
     private SparseArray<String> value= new SparseArray<>();
     private int instance;
@@ -76,6 +78,8 @@ public class ZNodeValue {
     public void setItems(List<String> items){
         this.items=new ArrayList<>(items);
     }
+    public void setValueMax(String valueMax){this.valueMax=valueMax;}
+    public void setValueMin(String valueMin){this.valueMin=valueMin;}
 
     public void setValue(String nodeValue)
     {
@@ -105,4 +109,6 @@ public class ZNodeValue {
     public String getValue(int instance){return value.get(instance);}
     public int getInstance(){return instance;}
     public String getValue(){return val;}
+    public String getValueMax(){ return valueMax;}
+    public String getValueMin(){ return valueMin;}
 }
