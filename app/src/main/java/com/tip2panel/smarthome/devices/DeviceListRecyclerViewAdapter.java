@@ -341,7 +341,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     switchValue=0;
                 }
 
-                int switchValueMax=0;
+                int switchValueMax=99;
                 try{
                     String val = item.getZNodeValue().getValueMax();
                     switchValueMax = Integer.parseInt(val);
@@ -369,7 +369,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     switchValueMin=0;
                 }
 
-                mSwitchMultilevelSeekBar.setMax(switchValueMax);
+                mSwitchMultilevelSeekBar.setMax(99);
                 //mSwitchMultilevelSeekBar.setMin(switchValueMin);
                 mSwitchMultilevelSeekBar.setProgress(switchValue);
                 Log.d("LEVEL","Switch value in int: " + switchValue);
