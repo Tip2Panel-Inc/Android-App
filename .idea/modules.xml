@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/SmartHome.iml" filepath="$PROJECT_DIR$/SmartHome.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/libs/ava88/ava88.iml" filepath="$PROJECT_DIR$/app/libs/ava88/ava88.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smarthome.iml" filepath="$PROJECT_DIR$/smarthome.iml" />
     </modules>
   </component>
 </project>

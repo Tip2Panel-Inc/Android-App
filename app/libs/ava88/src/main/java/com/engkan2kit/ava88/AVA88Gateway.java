@@ -1191,21 +1191,15 @@ public class AVA88Gateway{
 
                                 //Build the Node Information
                                 ZNode z = new ZNode(id, name, product, manufacturer);
-                                try {
-                                    z.nodeStatus = ZNodeStatus.deviceStatus.get(statusStr);
-                                } catch (NullPointerException ex) {
-                                    ex.printStackTrace();
-                                } finally {
-                                    z.nodeStatus = 0;
-                                }
+
                                 z.nodeStatusString = statusStr;
-                                z.nodeBType = btype;
-                                z.nodeGType = gtype;
-                                z.nodeLocation = location;
+                                z.nodeBType=btype;
+                                z.nodeGType=gtype;
+                                z.nodeLocation=location;
 
                                 NodeList values;
-                                int prod = ZNodeProduct.nodeZNodeProducttoInt(product);
-                                Log.d("NODES LIST", item.getAttribute("id") + " with product id " + prod + " Detected");
+                                //int prod = ZNodeProduct.nodeZNodeProducttoInt(product);
+                                //Log.d("NODES LIST", item.getAttribute("id") + " with product id " + prod + " Detected");
 
                                 values = item.getElementsByTagName("value");
                                 Log.d("NODES LIST", "Values: " + values.getLength());
@@ -1215,6 +1209,10 @@ public class AVA88Gateway{
                                     String nodeValueClass = value.getAttribute("class");
                                     String nodeValueGenre = value.getAttribute("genre");
                                     String nodeValueType = value.getAttribute("type");
+                                    String nodeValueLable= value.getAttribute("label");
+                                    String nodeValueUnits= value.getAttribute("units");
+                                    String nodeValueMax= value.getAttribute("max");
+                                    String nodeValueMin= value.getAttribute("min");
                                     Log.d("NODES LIST", "Values: class=" + nodeValueClass + "instance " + value.getAttribute("instance"));
                                     int nodeValueInstance;
                                     int nodeValueIndex;
@@ -1238,6 +1236,13 @@ public class AVA88Gateway{
                                             nodeValueIndex,
                                             nodeValueValue);
                                     //insert the value to the node with key = class+index
+                                    myZNodeValue.setValueLabel(nodeValueLable);
+                                    myZNodeValue.setNodeId(z.nodeID);
+                                    myZNodeValue.setValueUnits(nodeValueUnits);
+                                    if (nodeValueMax!=null || nodeValueMax.trim().length()>0)
+                                        myZNodeValue.setValueMax(nodeValueMax);
+                                    if (nodeValueMin!=null || nodeValueMin.trim().length()>0)
+                                        myZNodeValue.setValueMin(nodeValueMin);
                                     z.addZNodeValue(nodeValueClass + nodeValueIndex, myZNodeValue);
                                 }
                                 handler.onFound(z);
