@@ -405,6 +405,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private TextView mAlarmLabelTextView;
         private TextView mAlarmValueTextView;
         private ImageView mProductStatusImageView;
+        private ImageView mValueImageView;
         private Context mContext;
 
 
@@ -414,12 +415,31 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             mAlarmLabelTextView = (TextView) itemView.findViewById(R.id.valueNameTextView);
             mAlarmValueTextView = (TextView) itemView.findViewById(R.id.alarmValueTextView);
             mProductStatusImageView=(ImageView) itemView.findViewById(R.id.alarmStatusImageView);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
             mContext = itemView.getContext();
 
         }
 
         public void bind(final DeviceListItem item,final DeviceListItemListener listener){
             if (item != null) {
+                int index=item.getZNodeValue().getValueIndex();
+                switch(index) {
+                    //case 1:
+                    //    mValueImageView.setImageResource(R.drawable.ic_temperature);
+                    //    break;
+                    case 2:
+                        mValueImageView.setImageResource(R.drawable.ic_co2);
+                        break;
+                    // case 5:
+                    //     mValueImageView.setImageResource(R.drawable.ic_relative_humidity);
+                    //     break;
+                    case 7:
+                        mValueImageView.setImageResource(R.drawable.ic_motion);
+                        break;
+                    //case 27:
+                    //    mValueImageView.setImageResource(R.drawable.ic_ultraviolet);
+                    //    break;
+                }
                 String name = item.getZNodeValue().getValueLabel()+"";
                 mAlarmLabelTextView.setText(name);
                 Log.d(TAG,"Alarm Label "+name);
@@ -479,6 +499,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private TextView mSensorLabelTextView;
         private TextView mSensorValueTextView;
         private ImageView mSensorStatusImageView;
+        private ImageView mValueImageView;
         private Context mContext;
 
 
@@ -488,12 +509,31 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             mSensorLabelTextView = (TextView) itemView.findViewById(R.id.valueNameTextView);
             mSensorValueTextView = (TextView) itemView.findViewById(R.id.sensorBinaryTextView);
             mSensorStatusImageView=(ImageView) itemView.findViewById(R.id.sensorBinaryStatusImageView);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
             mContext = itemView.getContext();
 
         }
 
         public void bind(final DeviceListItem item,final DeviceListItemListener listener){
             if (item != null) {
+                int index=item.getZNodeValue().getValueIndex();
+                switch(index) {
+                    //case 1:
+                    //    mValueImageView.setImageResource(R.drawable.ic_temperature);
+                    //    break;
+                    case 4:
+                        mValueImageView.setImageResource(R.drawable.ic_co2);
+                        break;
+                   // case 5:
+                   //     mValueImageView.setImageResource(R.drawable.ic_relative_humidity);
+                   //     break;
+                    case 12:
+                        mValueImageView.setImageResource(R.drawable.ic_motion);
+                        break;
+                    //case 27:
+                    //    mValueImageView.setImageResource(R.drawable.ic_ultraviolet);
+                    //    break;
+                }
                 String name = item.getZNodeValue().getValueLabel()+"";
                 mSensorLabelTextView.setText(name);
                 Log.d(TAG,"Sensor Binary Label "+name);
@@ -547,6 +587,20 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
         public void bind(final DeviceListItem item,final DeviceListItemListener listener){
             if (item != null) {
+                int index=item.getZNodeValue().getValueIndex();
+                switch(index){
+                    case 1: mValueImageView.setImageResource(R.drawable.ic_temperature);
+                            break;
+                    case 3: mValueImageView.setImageResource(R.drawable.ic_luminance);
+                            break;
+                    case 5: mValueImageView.setImageResource(R.drawable.ic_relative_humidity);
+                            break;
+                    case 17: mValueImageView.setImageResource(R.drawable.ic_co2);
+                            break;
+                    case 27: mValueImageView.setImageResource(R.drawable.ic_ultraviolet);
+                            break;
+
+                }
                 String name = item.getZNodeValue().getValueLabel()+"";
                 mSensorLabelTextView.setText(name);
                 Log.d(TAG,"Sensor Binary Label "+name);
@@ -564,6 +618,60 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             }
         }
     }
+
+    /*
+    //ViewHolder for Meters
+    public static class MeterViewHolder extends RecyclerView.ViewHolder {
+        private TextView mMeterLabelTextView;
+        private TextView mMeterValueTextView;
+        private ImageView mMeterStatusImageView;
+        private ImageView mValueImageView;
+        private Context mContext;
+
+
+
+        public MeterViewHolder(View itemView) {
+            super(itemView);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
+            mMeterLabelTextView = (TextView) itemView.findViewById(R.id.valueNameTextView);
+            mMeterValueTextView = (TextView) itemView.findViewById(R.id.sensorMultilevelTextView);
+            mMeterStatusImageView =(ImageView) itemView.findViewById(R.id.sensorMultilevelStatusImageView);
+            mContext = itemView.getContext();
+
+        }
+
+        public void bind(final DeviceListItem item,final DeviceListItemListener listener){
+            if (item != null) {
+                int index=item.getZNodeValue().getValueIndex();
+
+                String name = item.getZNodeValue().getValueLabel()+"";
+                mMeterLabelTextView.setText(name);
+                if(index==0 && name.trim().equalsIgnoreCase("Energy")
+                    mValueImageView.setImageResource(R.drawable.ic);
+                        break;
+                    case 3: mValueImageView.setImageResource(R.drawable.ic_luminance);
+                        break;
+                    case 5: mValueImageView.setImageResource(R.drawable.ic_relative_humidity);
+                        break;
+                    case 27: mValueImageView.setImageResource(R.drawable.ic_ultraviolet);
+                        break;
+
+                }
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v){
+                        listener.onDeviceListItemClick(item);
+                    }
+                });
+
+                String meterValue=item.getZNodeValue().getValue();
+
+                mMeterValueTextView.setText(meterValue + " " + item.getZNodeValue().getValueUnits());
+
+
+            }
+        }
+    }
+*/
 
     //ViewHolder for Color Control Index 97
     public static class ColorControlViewHolder extends RecyclerView.ViewHolder {
