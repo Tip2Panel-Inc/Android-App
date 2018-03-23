@@ -2,6 +2,7 @@ package com.tip2panel.smarthome.devices;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -51,6 +52,9 @@ public class DevicesPagerFragment extends Fragment implements DevicesPagerContra
     private ViewPager viewPager;
     private SmartTabLayout viewPagerTab;
     private FragmentManager mChildFragmentManager;
+
+    Handler gatewayCheckHandler = new Handler();
+    private Runnable gatewayCheckRunnable=null;
     public DevicesPagerFragment(){
 
     }
@@ -103,6 +107,15 @@ public class DevicesPagerFragment extends Fragment implements DevicesPagerContra
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        gatewayCheckRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!mPresenter.isGatewayConnected()){
+                    mPresenter.connectToActiveGateway();
+                    gatewayCheckHandler.postDelayed(gatewayCheckRunnable, 60000);
+                }
+            }
+        };
         if(!mPresenter.isGatewayConnected()) {
             DialogUtilities.showGatewayConnectionErrorDialog(getActivity());
         }
@@ -240,5 +253,29 @@ public class DevicesPagerFragment extends Fragment implements DevicesPagerContra
         mPresenter.addLocation(location);
     }
 
+
+    @Override
+    public void onDestroy () {
+        if(gatewayCheckRunnable!=null)
+            gatewayCheckHandler.removeCallbacks(gatewayCheckRunnable);
+        super.onDestroy ();
+
+    }
+
+    @Override
+    public void onResume() {
+        gatewayCheckHandler.post(gatewayCheckRunnable);
+        //handler.postDelayed(runnableCode,5000);
+        //gatewayCheckHandler.postDelayed(gatewayCheckRunnable,60000);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+
+        if (gatewayCheckRunnable!=null)
+            gatewayCheckHandler.removeCallbacks(gatewayCheckRunnable);
+        super.onPause();
+    }
 
 }

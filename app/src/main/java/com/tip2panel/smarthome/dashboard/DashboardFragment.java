@@ -126,7 +126,7 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
             public void run() {
                 if (!mPresenter.isGatewayConnected()){
                     mPresenter.connectToActiveGateway();
-                    handler.postDelayed(runnableCode, 60000);
+                    gatewayCheckHandler.postDelayed(gatewayCheckRunnable, 60000);
                 }
             }
         };
@@ -221,8 +221,8 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
         if (runnableCode!=null) {
             handler.removeCallbacks(runnableCode);
         }
-        if (runnableCode!=null)
-            handler.removeCallbacks(runnableCode);
+        if (gatewayCheckRunnable!=null)
+            gatewayCheckHandler.removeCallbacks(gatewayCheckRunnable);
         super.onPause();
     }
 
