@@ -7,6 +7,7 @@ package com.tip2panel.smarthome.splash;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.engkan2kit.ava88.AVA88GatewayInfo;
 import com.tip2panel.smarthome.dashboard.DashboardActivity;
@@ -20,11 +21,13 @@ import com.tip2panel.smarthome.utils.BaseActivity;
 import com.tip2panel.smarthome.utils.DialogUtilities;
 
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.disposables.Disposable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends AppCompatActivity {
     private  SmartHomeRepository mSmartHomeRepository;
+    private Disposable networkDisposable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,20 +45,7 @@ public class SplashActivity extends BaseActivity {
         mSmartHomeRepository.checkNetworkState(this, new GatewayDataSource.CheckNetworkStateCallback() {
             @Override
             public void onWifiConnected() {
-                mSmartHomeRepository.connectActiveGateway(new GatewayDataSource.GatewayConnectionCallback() {
-                    @Override
-                    public void onSuccess(AVA88GatewayInfo ava88GatewayInfo) {
-                        Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
 
-                    @Override
-                    public void onFailure(int error, AVA88GatewayInfo gatewayInfo) {
-                        DialogUtilities.showGatewayConnectionErrorDialog(SplashActivity.this);
-                    }
-
-                });
             }
 
             @Override
@@ -77,4 +67,26 @@ public class SplashActivity extends BaseActivity {
 
 
     }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+        Log.d("ACTIVITY", "STOPPING");
+        safelyDispose(networkDisposable);
+    }
+
+    private void safelyDispose(Disposable... disposables) {
+        for (Disposable subscription : disposables) {
+            if (subscription != null && !subscription.isDisposed()) {
+                subscription.dispose();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 }

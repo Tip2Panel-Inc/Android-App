@@ -59,8 +59,9 @@ public class DialogUtilities {
         DialogUtilities.getNoWifiDialog(activity, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
                 activity.finish();
+                dialog.dismiss();
+
             }
         }).show();
     }
