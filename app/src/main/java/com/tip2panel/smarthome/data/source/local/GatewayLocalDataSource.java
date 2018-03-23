@@ -401,6 +401,9 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                 else if( valueClassId==0x31){
                     deviceListItem.setType(((valueClassId & 0xFF) << 8)| 0x0000);
                 }
+                else if( valueClassId==0x32){
+                    deviceListItem.setType(((valueClassId & 0xFF) << 8)| 0x0000);
+                }
                 else {
                     deviceListItem.setType(((valueClassId & 0xFF) << 8) | entry.getValue().getValueIndex() & 0x00FF);
                 }
@@ -424,6 +427,12 @@ public class GatewayLocalDataSource implements GatewayDataSource {
                         break;
                     case 0x3100: //multilevel sensors
                         if ((valueIndex>0 && valueIndex <=51))
+                        {
+                            deviceListItems.add(deviceListItem);
+                        }
+                        break;
+                    case 0x3200: //multilevel sensors
+                        if ((valueIndex==0 || valueIndex == 16 || valueIndex == 32 || valueIndex == 40))
                         {
                             deviceListItems.add(deviceListItem);
                         }

@@ -48,6 +48,8 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
     private boolean pause =false;
     Handler handler = new Handler();
     private Runnable runnableCode=null;
+    Handler gatewayCheckHandler = new Handler();
+    private Runnable gatewayCheckRunnable=null;
     private View rootView;
 
     public DashboardFragment() {
@@ -118,17 +120,33 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        // Define the code block to be executed
-        runnableCode = new Runnable() {
+        super.onActivityCreated(savedInstanceState);
+        gatewayCheckRunnable = new Runnable() {
             @Override
             public void run() {
-                // Do something here on the main thread
-                mPresenter.loadDevices();
-                Log.d("Handlers", "Refresh lists");
-                // Repeat this the same runnable code block again another 2 seconds
-                handler.postDelayed(runnableCode, 5000);
+                if (!mPresenter.isGatewayConnected()){
+                    mPresenter.connectToActiveGateway();
+                    handler.postDelayed(runnableCode, 60000);
+                }
             }
         };
+        if(!mPresenter.isGatewayConnected()) {
+            DialogUtilities.showGatewayConnectionErrorDialog(getActivity());
+        }
+        else {
+            // Define the code block to be executed
+            runnableCode = new Runnable() {
+                @Override
+                public void run() {
+                    // Do something here on the main thread
+                    mPresenter.loadDevices();
+                    Log.d("Handlers", "Refresh lists");
+                    // Repeat this the same runnable code block again another 2 seconds
+                    handler.postDelayed(runnableCode, 5000);
+                }
+            };
+        }
+
     }
 
     @Override
@@ -182,6 +200,8 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
     public void onDestroy () {
         if (runnableCode!=null)
             handler.removeCallbacks(runnableCode);
+        if(gatewayCheckRunnable!=null)
+            gatewayCheckHandler.removeCallbacks(gatewayCheckRunnable);
         super.onDestroy ();
 
     }
@@ -189,6 +209,9 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
     @Override
     public void onResume() {
         handler.post(runnableCode);
+        gatewayCheckHandler.post(gatewayCheckRunnable);
+        //handler.postDelayed(runnableCode,5000);
+        //gatewayCheckHandler.postDelayed(gatewayCheckRunnable,60000);
         super.onResume();
     }
 
@@ -198,36 +221,10 @@ public class DashboardFragment extends Fragment implements DashboardContract.Mvp
         if (runnableCode!=null) {
             handler.removeCallbacks(runnableCode);
         }
+        if (runnableCode!=null)
+            handler.removeCallbacks(runnableCode);
         super.onPause();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // show menu only when home fragment is selected
-        inflater.inflate(R.menu.toolbar, menu);
-        super.onCreateOptionsMenu(menu, inflater);
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-
-        // Add Widget selected from toolbar fragment
-        if (id == R.id.action_add) {
-            Toast.makeText(getActivity().getApplicationContext(), "Add Widget Selected!", Toast.LENGTH_LONG).show();
-        }
-
-        // Add Widget selected from toolbar fragment
-        if (id == R.id.action_edit) {
-            Toast.makeText(getActivity().getApplicationContext(), "Edit Selected!", Toast.LENGTH_LONG).show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

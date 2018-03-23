@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.tip2panel.smarthome.R;
+import com.tip2panel.smarthome.dashboard.DashboardActivity;
 import com.tip2panel.smarthome.gateway.GatewayActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        intent = new Intent(this, GatewayActivity.class);
+        intent = new Intent(this, DashboardActivity.class);
         login = (Button) findViewById(R.id.button_login);
         loginfb = (Button) findViewById(R.id.button_loginfb);
         register = (Button) findViewById(R.id.button_register);

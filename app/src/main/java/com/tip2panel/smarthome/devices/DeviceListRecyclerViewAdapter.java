@@ -1,6 +1,8 @@
 package com.tip2panel.smarthome.devices;
 
 import android.content.Context;
+import android.media.Image;
+import android.provider.ContactsContract;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -81,6 +83,10 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 ViewGroup sensorMultilevelViewGroup = (ViewGroup) mInflater.inflate(R.layout.devices_item_value_multilevel_sensor,parent,false);
                 SensorMultilevelViewHolder sensorMultilevelViewHolder = new SensorMultilevelViewHolder(sensorMultilevelViewGroup);
                 return sensorMultilevelViewHolder;
+            case 0x3200:
+                ViewGroup meterViewGroup = (ViewGroup) mInflater.inflate(R.layout.devices_item_value_multilevel_sensor,parent,false);
+                MeterViewHolder meterViewHolder = new MeterViewHolder(meterViewGroup);
+                return meterViewHolder;
             case 0x3361:
                 ViewGroup colorControlViewGroup = (ViewGroup) mInflater.inflate (R.layout.devices_item_value_color_control,parent,false);
                 ColorControlViewHolder colorControlViewHolder = new ColorControlViewHolder(colorControlViewGroup);
@@ -117,6 +123,9 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 break;
             case 0x3100:
                 ((SensorMultilevelViewHolder) holder).bind(object,mListener);
+                break;
+            case 0x3200:
+                ((MeterViewHolder) holder).bind(object,mListener);
                 break;
             case 0x3361:
                 ((ColorControlViewHolder) holder).bind(object,mListener);
@@ -251,15 +260,18 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private FlexboxLayout mFlexboxLayout;
         private TextView mBinarySwitchName;
         private Switch mBinarySwitch;
+        private ImageView mValueImageView;
         private Context mContext;
 
 
         public SwitchBinaryViewHolder(View itemView) {
             super(itemView);
             mBinarySwitchName = (TextView) itemView.findViewById(R.id.valueNameTextView);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
             mBinarySwitch = (Switch) itemView.findViewById(R.id.binarySwitch);
             //mFlexboxLayout = (FlexboxLayout) itemView.findViewById(R.id.deviceValueFlexboxLayout);
             mContext = itemView.getContext();
+            mValueImageView.setImageResource(R.drawable.ic_switch_off);
 
         }
 
@@ -275,10 +287,14 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     mBinarySwitchName.setText(valueLabel);
                 }
 
-                if (item.getZNodeValue().getValue(1).equals("True"))
+                if (item.getZNodeValue().getValue(1).equals("True")) {
                     mBinarySwitch.setChecked(true);
-                else
+                    mValueImageView.setImageResource(R.drawable.ic_switch_on);
+                }
+                else {
                     mBinarySwitch.setChecked(false);
+                    mValueImageView.setImageResource(R.drawable.ic_switch_off);
+                }
                 Log.d(TAG,"Switch Binary");
                 mBinarySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -286,8 +302,14 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     ZNodeValue zNodeValue= item.getZNodeValue();
                     String val = "False";
-                    if (isChecked)
+                    if (isChecked) {
                         val = "True";
+                        mValueImageView.setImageResource(R.drawable.ic_switch_on);
+                    }
+                    else{
+                        val = "False";
+                        mValueImageView.setImageResource(R.drawable.ic_switch_off);
+                    }
                     zNodeValue.setValue(val, 1);
                     //item.addZNodeValue(item.defaultValueKey,zNodeValue);
                     //<value genre="user" type="bool" class="SWITCH BINARY" instance="1" index="0" label="Switch" units="" readonly="false" polled="false">False</value>
@@ -303,6 +325,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private FlexboxLayout mFlexboxLayout;
         private TextView mSwitchMultilevelName;
         private SeekBar mSwitchMultilevelSeekBar;
+        private ImageView mValueImageView;
         private Context mContext;
 
 
@@ -310,7 +333,9 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             super(itemView);
             mSwitchMultilevelName = (TextView) itemView.findViewById(R.id.valueNameTextView);
             mSwitchMultilevelSeekBar = (SeekBar) itemView.findViewById(R.id.switchMultilevelSeekBar);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
             mContext = itemView.getContext();
+            mValueImageView.setImageResource(R.drawable.ic_switch_off);
 
         }
 
@@ -372,6 +397,10 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 mSwitchMultilevelSeekBar.setMax(99);
                 //mSwitchMultilevelSeekBar.setMin(switchValueMin);
                 mSwitchMultilevelSeekBar.setProgress(switchValue);
+                if(switchValue>0)
+                    mValueImageView.setImageResource(R.drawable.ic_level);
+                else
+                    mValueImageView.setImageResource(R.drawable.ic_switch_off);
                 Log.d("LEVEL","Switch value in int: " + switchValue);
                 mSwitchMultilevelSeekBar.setOnSeekBarChangeListener(
                         new SeekBar.OnSeekBarChangeListener(){
@@ -380,6 +409,10 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                                 ZNodeValue zNodeValue= item.getZNodeValue();
                                 zNodeValue.setValue(String.valueOf(progress), 1);
+                                if(progress>0)
+                                    mValueImageView.setImageResource(R.drawable.ic_level);
+                                else
+                                    mValueImageView.setImageResource(R.drawable.ic_switch_off);
                                 listener.onDeviceItemChangeValue(zNodeValue);
 
                             }
@@ -619,7 +652,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    /*
+
     //ViewHolder for Meters
     public static class MeterViewHolder extends RecyclerView.ViewHolder {
         private TextView mMeterLabelTextView;
@@ -646,17 +679,19 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
                 String name = item.getZNodeValue().getValueLabel()+"";
                 mMeterLabelTextView.setText(name);
-                if(index==0 && name.trim().equalsIgnoreCase("Energy")
-                    mValueImageView.setImageResource(R.drawable.ic);
-                        break;
-                    case 3: mValueImageView.setImageResource(R.drawable.ic_luminance);
-                        break;
-                    case 5: mValueImageView.setImageResource(R.drawable.ic_relative_humidity);
-                        break;
-                    case 27: mValueImageView.setImageResource(R.drawable.ic_ultraviolet);
-                        break;
-
+                if(index==0 && name.trim().equalsIgnoreCase("Energy")){ //energy in KWH
+                    mValueImageView.setImageResource(R.drawable.ic_meter_kwh);
                 }
+                else if(index==16 && name.trim().equalsIgnoreCase("Power")){ //power in KW
+                    mValueImageView.setImageResource(R.drawable.ic_meter_kw);
+                }
+                else if(index==32 && name.trim().equalsIgnoreCase("Voltage")){ //voltage in V
+                    mValueImageView.setImageResource(R.drawable.ic_meter_v);
+                }
+                else if(index==40 && name.trim().equalsIgnoreCase("Current")){ //current in A
+                    mValueImageView.setImageResource(R.drawable.ic_meter_a);
+                }
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v){
                         listener.onDeviceListItemClick(item);
@@ -671,12 +706,13 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             }
         }
     }
-*/
+
 
     //ViewHolder for Color Control Index 97
     public static class ColorControlViewHolder extends RecyclerView.ViewHolder {
         private FlexboxLayout mFlexboxLayout;
         private TextView mRGBWSwitchViewHolderName;
+        private ImageView mValueImageView;
         private Context mContext;
         private Button mColorPicker;
         private Switch mRGBSwitch;
@@ -686,7 +722,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         public ColorControlViewHolder(View itemView) {
             super(itemView);
             mRGBWSwitchViewHolderName = (TextView) itemView.findViewById(R.id.valueNameTextView);
-            //mFlexboxLayout = (FlexboxLayout) itemView.findViewById(R.id.deviceValueFlexboxLayout);
+            mValueImageView = (ImageView) itemView.findViewById(R.id.valueImageView);
             mColorPicker = (Button) itemView.findViewById(R.id.colorPickerButton);
             mRGBSwitch = (Switch) itemView.findViewById(R.id.binarySwitch);
             mContext = itemView.getContext();
@@ -696,6 +732,7 @@ public class DeviceListRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         public void bind(final DeviceListItem item,final DeviceListItemListener listener){
             if (item != null) {
                 String valueLabel = item.getZNodeValue().getValueLabel();
+                mValueImageView.setImageResource(R.drawable.ic_color_control_rgbw);
                 if (valueLabel==null || valueLabel.length() ==0)
                 {
                     mRGBWSwitchViewHolderName.setText("Color");

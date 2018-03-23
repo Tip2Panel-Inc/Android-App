@@ -46,7 +46,8 @@ public class DashboardActivity extends BaseActivity{
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        //drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
 
@@ -92,6 +93,7 @@ public class DashboardActivity extends BaseActivity{
                         } else if (id == R.id.nav_settings) {
 
                         } else if (id == R.id.nav_logout) {
+                            finish();
 
                         }
 

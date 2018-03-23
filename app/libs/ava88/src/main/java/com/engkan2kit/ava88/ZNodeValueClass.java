@@ -17,10 +17,13 @@ public final class ZNodeValueClass {
     public static final String strSENSOR_BINARY         ="SENSOR BINARY";
     public static final int SENSOR_MULTILEVEL   =0x31;
     public static final String strSENSOR_MULTILEVEL     ="SENSOR MULTILEVEL";
+    public static final int METER               =0x32;
+    public static final String strMETER                 ="METER";
     public static final int COLOR_CONTROL       =0x33;
     public static final String strCOLOR_CONTROL         ="COLOR CONTROL";
     public static final int ALARM               =0x71;
     public static final String strALARM                 ="ALARM";
+
 
     public final static HashMap<String,Integer> valueClass =new HashMap<>();
     static{
@@ -29,6 +32,7 @@ public final class ZNodeValueClass {
         valueClass.put(strSWITCH_MULTILEVEL,SWITCH_MULTILEVEL);
         valueClass.put(strSENSOR_BINARY,SENSOR_BINARY);
         valueClass.put(strSENSOR_MULTILEVEL,SENSOR_MULTILEVEL);
+        valueClass.put(strMETER,METER);
         valueClass.put(strCOLOR_CONTROL,COLOR_CONTROL);
         valueClass.put(strALARM,ALARM);
     }

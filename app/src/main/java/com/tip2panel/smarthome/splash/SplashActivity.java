@@ -8,19 +8,44 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.engkan2kit.ava88.AVA88GatewayInfo;
+import com.tip2panel.smarthome.dashboard.DashboardActivity;
+import com.tip2panel.smarthome.data.source.GatewayDataSource;
+import com.tip2panel.smarthome.data.source.SmartHomeRepository;
+import com.tip2panel.smarthome.data.source.local.GatewayLocalDataSource;
+import com.tip2panel.smarthome.gateway.GatewayActivity;
 import com.tip2panel.smarthome.login.LoginActivity;
 import com.crashlytics.android.Crashlytics;
+import com.tip2panel.smarthome.utils.DialogUtilities;
+
 import io.fabric.sdk.android.Fabric;
 
-public class SplashActivity extends AppCompatActivity {
+import static com.google.common.base.Preconditions.checkNotNull;
 
+public class SplashActivity extends AppCompatActivity {
+    private  SmartHomeRepository mSmartHomeRepository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        mSmartHomeRepository = checkNotNull(SmartHomeRepository.getInstance(
+                GatewayLocalDataSource.getInstance(getApplicationContext())),
+                "smartHomeRepository cannot be null!");
+        mSmartHomeRepository.connectActiveGateway(new GatewayDataSource.GatewayConnectionCallback() {
+            @Override
+            public void onSuccess(AVA88GatewayInfo ava88GatewayInfo) {
+                Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+            @Override
+            public void onFailure(int error, AVA88GatewayInfo gatewayInfo) {
+                DialogUtilities.showGatewayConnectionErrorDialog(getParent());
+            }
+
+        });
+
+
     }
 }
