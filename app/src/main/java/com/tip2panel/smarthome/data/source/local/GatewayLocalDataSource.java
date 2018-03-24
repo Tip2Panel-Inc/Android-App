@@ -195,6 +195,8 @@ public class GatewayLocalDataSource implements GatewayDataSource {
         final AVA88GatewayInfo ava88GatewayInfo = getActiveGateway();
         if (ava88GatewayInfo!=null)
             connectKnownGateway(ava88GatewayInfo,callback);
+        else
+            callback.onFailure(-1,null);
     }
 
     @Override
